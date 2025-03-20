@@ -67,7 +67,7 @@ public class BoardServiceImpl implements BoardService {
 
                     for (Forum forum : category.getForums()) {
                         if (forum.getParent() == null) {
-                            ForumDTO forumDTO = toDTO(forum);
+                            ForumDTO forumDTO = toForumDTO(forum);
                             categoryDTO.getForums().add(forumDTO);
                             rootForums.put(forumDTO.getId(), forumDTO);
                         }
@@ -75,7 +75,7 @@ public class BoardServiceImpl implements BoardService {
 
                     for (Forum forum : category.getForums()) {
                         if (forum.getParent() != null) {
-                           rootForums.get(forum.getParent().getId()).getChildren().add(toDTO(forum));
+                           rootForums.get(forum.getParent().getId()).getChildren().add(toForumDTO(forum));
                         }
                     }
 
@@ -86,7 +86,7 @@ public class BoardServiceImpl implements BoardService {
         return boardDTO;
     }
 
-    private ForumDTO toDTO(Forum forum) {
+    private ForumDTO toForumDTO(Forum forum) {
         return ForumDTO.builder()
                 .id(forum.getId())
                 .title(forum.getTitle())

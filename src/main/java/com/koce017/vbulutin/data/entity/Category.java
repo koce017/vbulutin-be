@@ -33,6 +33,7 @@ public class Category {
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;
 
+    @Builder.Default
     @OrderBy("position ASC")
     @OneToMany(mappedBy = "category")
     private List<Forum> forums = new ArrayList<>();

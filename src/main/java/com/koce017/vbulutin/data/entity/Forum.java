@@ -39,6 +39,7 @@ public class Forum {
     @ManyToOne(fetch = FetchType.LAZY)
     private Forum parent;
 
+    @Builder.Default
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private List<Forum> children = new ArrayList<>();
 
