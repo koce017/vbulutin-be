@@ -25,15 +25,15 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<BoardDTO> findAll() {
         List<Board> boards = boardRepository.findAll();
-        return boards.stream().map(board -> {
-            BoardDTO boardDTO = new BoardDTO();
-            boardDTO.setId(board.getId());
-            boardDTO.setSlug(board.getSlug());
-            boardDTO.setTitle(board.getTitle());
-            boardDTO.setDescription(board.getDescription());
-            boardDTO.setVisible(board.isVisible());
-            return boardDTO;
-        }).toList();
+        return boards.stream().map(board ->
+                BoardDTO.builder()
+                        .id(board.getId())
+                        .slug(board.getSlug())
+                        .title(board.getTitle())
+                        .description(board.getDescription())
+                        .isVisible(board.isVisible())
+                        .build()
+        ).toList();
     }
 
     @Override

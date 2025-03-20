@@ -3,6 +3,7 @@ package com.koce017.vbulutin.data.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -24,6 +25,7 @@ public class Board {
     @Column(nullable = false, unique = true)
     private String slug;
 
+    @Lob
     private String description;
 
     @Column(nullable = false)
@@ -32,8 +34,9 @@ public class Board {
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
 
+    @Builder.Default
     @OrderBy("position ASC")
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-    private List<Category> categories;
+    private List<Category> categories = new ArrayList<>();
 
 }

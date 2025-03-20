@@ -3,6 +3,7 @@ package com.koce017.vbulutin.data.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +13,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "forums")
-public class Forum {
+@Table(name = "topics")
+public class Topic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,27 +26,28 @@ public class Forum {
     @Column(nullable = false, unique = true)
     private String slug;
 
-    @Lob
-    private String description;
-
-    @Column(nullable = false)
-    private Long position;
-
     @Column(nullable = false)
     private boolean isLocked;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Category category;
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Forum parent;
+    private Forum forum;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Post solution;
 
     @Builder.Default
-    @OneToMany(mappedBy = "forum")
-    private List<Topic> topics = new ArrayList<>();
+    @OrderBy("createdAt ASC")
+    @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY)
+    private List<Post> posts = new ArrayList<>();
 
-    @Builder.Default
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-    private List<Forum> children = new ArrayList<>();
+    @PrePersist
+    private void prePersist() {
+        createdAt = LocalDateTime.now();
+    }
 
 }
