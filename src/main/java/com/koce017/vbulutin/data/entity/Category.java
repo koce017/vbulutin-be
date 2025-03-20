@@ -27,6 +27,7 @@ public class Category {
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;
 
+    @OrderBy("position ASC")
     @OneToMany(mappedBy = "category")
     private List<Forum> forums = new ArrayList<>();
 

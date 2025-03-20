@@ -1,7 +1,5 @@
 package com.koce017.vbulutin.data.dto;
 
-import com.koce017.vbulutin.data.entity.Board;
-import com.koce017.vbulutin.data.entity.Forum;
 
 import java.util.List;
 
@@ -11,8 +9,8 @@ public class CategoryDTO {
     private String slug;
     private String description;
     private long position;
-    private Board board;
-    private List<Forum> forums;
+    private BoardDTO board;
+    private List<ForumDTO> forums;
 
     public Long getId() {
         return id;
@@ -54,19 +52,19 @@ public class CategoryDTO {
         this.position = position;
     }
 
-    public Board getBoard() {
+    public BoardDTO getBoard() {
         return board;
     }
 
-    public void setBoard(Board board) {
+    public void setBoard(BoardDTO board) {
         this.board = board;
     }
 
-    public List<Forum> getForums() {
+    public List<ForumDTO> getForums() {
         return forums;
     }
 
-    public void setForums(List<Forum> forums) {
+    public void setForums(List<ForumDTO> forums) {
         this.forums = forums;
     }
 }

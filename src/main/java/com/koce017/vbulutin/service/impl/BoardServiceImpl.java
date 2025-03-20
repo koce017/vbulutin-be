@@ -2,10 +2,10 @@ package com.koce017.vbulutin.service.impl;
 
 import com.koce017.vbulutin.data.dto.BoardDTO;
 import com.koce017.vbulutin.data.dto.CategoryDTO;
+import com.koce017.vbulutin.data.dto.ForumDTO;
 import com.koce017.vbulutin.data.entity.Board;
 import com.koce017.vbulutin.repository.BoardRepository;
 import com.koce017.vbulutin.service.BoardService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +13,11 @@ import java.util.List;
 @Service
 public class BoardServiceImpl implements BoardService {
 
-    @Autowired
-    private BoardRepository boardRepository;
+    private final BoardRepository boardRepository;
+
+    public BoardServiceImpl(BoardRepository boardRepository) {
+        this.boardRepository = boardRepository;
+    }
 
     @Override
     public List<BoardDTO> findAll() {
@@ -31,7 +34,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardDTO findBySlug(String slug) {
+    public BoardDTO findBoardHome(String slug) {
         Board board = boardRepository.findBySlug(slug).orElseThrow();
 
         BoardDTO boardDTO = new BoardDTO();
@@ -41,16 +44,40 @@ public class BoardServiceImpl implements BoardService {
         boardDTO.setDescription(board.getDescription());
         boardDTO.setVisible(board.isVisible());
         boardDTO.setCategories(
-                board.getCategories().stream().map(category -> {
+                board.getCategories().stream().map(category ->
+                {
                     CategoryDTO categoryDTO = new CategoryDTO();
                     categoryDTO.setId(category.getId());
                     categoryDTO.setTitle(category.getTitle());
                     categoryDTO.setSlug(category.getSlug());
-                    categoryDTO.setDescription(category.getDescription());
-                    categoryDTO.setPosition(category.getPosition());
+
+                    categoryDTO.setForums(category.getForums().stream().map(forum ->
+                    {
+                        ForumDTO forumDTO = new ForumDTO();
+                        forumDTO.setId(forum.getId());
+                        forumDTO.setTitle(forum.getTitle());
+                        forumDTO.setSlug(forum.getSlug());
+                        forumDTO.setLocked(forum.isLocked());
+
+                        forumDTO.setChildren(
+                                forum.getChildren().stream().map(child ->
+                                {
+                                    ForumDTO childDTO = new ForumDTO();
+                                    childDTO.setId(forum.getId());
+                                    childDTO.setTitle(forum.getTitle());
+                                    childDTO.setSlug(forum.getSlug());
+                                    return childDTO;
+                                }).toList()
+                        );
+
+                        return forumDTO;
+
+                    }).toList());
+
                     return categoryDTO;
-                }
-        ).toList());
+
+                }).toList()
+        );
 
         return boardDTO;
     }

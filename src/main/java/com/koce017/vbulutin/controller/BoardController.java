@@ -2,7 +2,6 @@ package com.koce017.vbulutin.controller;
 
 import com.koce017.vbulutin.data.dto.BoardDTO;
 import com.koce017.vbulutin.service.BoardService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +13,11 @@ import java.util.List;
 @RequestMapping(path = "/board")
 public class BoardController {
 
-    @Autowired
-    private BoardService boardService;
+    private final BoardService boardService;
+
+    public BoardController(BoardService boardService) {
+        this.boardService = boardService;
+    }
 
     @GetMapping
     public List<BoardDTO> findAll() {
@@ -23,7 +25,7 @@ public class BoardController {
     }
 
     @GetMapping("/{slug}")
-    public BoardDTO findBySlug(@PathVariable String slug) {
-        return boardService.findBySlug(slug);
+    public BoardDTO findBoardHome(@PathVariable String slug) {
+        return boardService.findBoardHome(slug);
     }
 }

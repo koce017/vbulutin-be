@@ -24,6 +24,8 @@ public class VBulutinApplication {
 		SpringApplication.run(VBulutinApplication.class, args);
 	}
 
+	private final Random random = new Random();
+
 	@Bean
 	public CommandLineRunner runner(
 			UserRepository userRepository,
@@ -33,25 +35,23 @@ public class VBulutinApplication {
 	) {
 		return args -> {
 			Faker faker = Faker.instance();
-			Slugify slugify = Slugify.builder()
-					.lowerCase(true)
-					.build();
+			Slugify slugify = Slugify.builder().lowerCase(true).build();
 
 			for (long i = 1; i <= 5; ++i) {
 				User user = new User();
 				user.setUsername(faker.name().username());
 				user.setPassword(faker.animal().name());
-				user.setEmail(user.getUsername() + "@mail.com");
+				user.setEmail(faker.internet().emailAddress());
 				userRepository.save(user);
 
 				Board board = new Board();
-				board.setTitle(faker.name().title());
+				board.setTitle(faker.book().title());
 				board.setSlug(slugify.slugify(board.getTitle()) + "." + System.currentTimeMillis());
 				board.setOwner(user);
-				board.setVisible(new Random().nextBoolean());
+				board.setVisible(random.nextBoolean());
 				boardRepository.save(board);
 
-				for (long j = 1; j <= 3; ++j) {
+				for (long j = 1; j <= 2; ++j) {
 					Category category = new Category();
 					category.setTitle(faker.book().title());
 					category.setSlug(slugify.slugify(category.getTitle()) + "." + System.currentTimeMillis());
@@ -61,13 +61,32 @@ public class VBulutinApplication {
 
 					for (long k = 1; k <= 2; ++k) {
 						Forum forum = new Forum();
-						forum.setTitle(faker.name().title());
+						forum.setTitle(faker.book().title());
 						forum.setSlug(slugify.slugify(forum.getTitle()) + "." + System.currentTimeMillis());
 						forum.setCategory(category);
 						forum.setPosition(k);
 						forumRepository.save(forum);
-						category.getForums().add(forum);
+
+						if (k % 2 == 0) {
+							Forum subforum1 = new Forum();
+							subforum1.setTitle(faker.book().title());
+							subforum1.setSlug(slugify.slugify(subforum1.getTitle()) + "." + System.currentTimeMillis());
+							subforum1.setCategory(category);
+							subforum1.setPosition(1L);
+							subforum1.setParent(forum);
+							forumRepository.save(subforum1);
+
+							Forum subforum2 = new Forum();
+							subforum2.setTitle(faker.book().title());
+							subforum2.setSlug(slugify.slugify(subforum2.getTitle()) + "." + System.currentTimeMillis());
+							subforum2.setCategory(category);
+							subforum2.setPosition(2L);
+							subforum2.setParent(forum);
+							forumRepository.save(subforum2);
+						}
+
 					}
+
 				}
 			}
 		};
