@@ -26,7 +26,6 @@ public class VBulutinApplication {
 
 	@Bean
 	public CommandLineRunner runner(
-			Slugify slugify,
 			UserRepository userRepository,
 			BoardRepository boardRepository,
 			CategoryRepository categoryRepository,
@@ -34,6 +33,9 @@ public class VBulutinApplication {
 	) {
 		return args -> {
 			Faker faker = Faker.instance();
+			Slugify slugify = Slugify.builder()
+					.lowerCase(true)
+					.build();
 
 			for (long i = 1; i <= 5; ++i) {
 				User user = new User();
@@ -44,7 +46,7 @@ public class VBulutinApplication {
 
 				Board board = new Board();
 				board.setTitle(faker.name().title());
-				board.setSlug(slugify.slugify(board.getTitle()) + "." + i);
+				board.setSlug(slugify.slugify(board.getTitle()) + "." + System.currentTimeMillis());
 				board.setOwner(user);
 				board.setVisible(new Random().nextBoolean());
 				boardRepository.save(board);
@@ -52,7 +54,7 @@ public class VBulutinApplication {
 				for (long j = 1; j <= 3; ++j) {
 					Category category = new Category();
 					category.setTitle(faker.book().title());
-					category.setSlug(slugify.slugify(category.getTitle()) + "." + j);
+					category.setSlug(slugify.slugify(category.getTitle()) + "." + System.currentTimeMillis());
 					category.setBoard(board);
 					category.setPosition(j);
 					categoryRepository.save(category);
@@ -60,7 +62,7 @@ public class VBulutinApplication {
 					for (long k = 1; k <= 2; ++k) {
 						Forum forum = new Forum();
 						forum.setTitle(faker.name().title());
-						forum.setSlug(slugify.slugify(forum.getTitle()) + "." + k);
+						forum.setSlug(slugify.slugify(forum.getTitle()) + "." + System.currentTimeMillis());
 						forum.setCategory(category);
 						forum.setPosition(k);
 						forumRepository.save(forum);

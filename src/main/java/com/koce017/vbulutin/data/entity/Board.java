@@ -2,6 +2,8 @@ package com.koce017.vbulutin.data.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "boards")
 public class Board {
@@ -23,6 +25,10 @@ public class Board {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
+
+    @OrderBy("position ASC")
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<Category> categories;
 
     public Long getId() {
         return id;
@@ -70,5 +76,13 @@ public class Board {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }

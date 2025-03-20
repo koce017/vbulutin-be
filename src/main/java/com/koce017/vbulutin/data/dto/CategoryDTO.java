@@ -1,15 +1,18 @@
 package com.koce017.vbulutin.data.dto;
 
+import com.koce017.vbulutin.data.entity.Board;
+import com.koce017.vbulutin.data.entity.Forum;
+
 import java.util.List;
 
-public class BoardDTO {
+public class CategoryDTO {
     private Long id;
     private String title;
     private String slug;
     private String description;
-    private boolean isVisible;
-    private UserDTO owner;
-    private List<CategoryDTO> categories;
+    private long position;
+    private Board board;
+    private List<Forum> forums;
 
     public Long getId() {
         return id;
@@ -43,27 +46,27 @@ public class BoardDTO {
         this.description = description;
     }
 
-    public boolean isVisible() {
-        return isVisible;
+    public long getPosition() {
+        return position;
     }
 
-    public void setVisible(boolean visible) {
-        isVisible = visible;
+    public void setPosition(long position) {
+        this.position = position;
     }
 
-    public UserDTO getOwner() {
-        return owner;
+    public Board getBoard() {
+        return board;
     }
 
-    public void setOwner(UserDTO owner) {
-        this.owner = owner;
+    public void setBoard(Board board) {
+        this.board = board;
     }
 
-    public List<CategoryDTO> getCategories() {
-        return categories;
+    public List<Forum> getForums() {
+        return forums;
     }
 
-    public void setCategories(List<CategoryDTO> categories) {
-        this.categories = categories;
+    public void setForums(List<Forum> forums) {
+        this.forums = forums;
     }
 }
