@@ -1,5 +1,6 @@
 package com.koce017.vbulutin.data.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class BoardDTO {
     private String title;
     private String slug;
     private String description;
+    @JsonProperty("isVisible")
     private boolean isVisible;
     private UserDTO owner;
     private List<CategoryDTO> categories;

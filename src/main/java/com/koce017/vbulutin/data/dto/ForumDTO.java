@@ -1,5 +1,6 @@
 package com.koce017.vbulutin.data.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class ForumDTO {
     private String slug;
     private String description;
     private Long position;
+    @JsonProperty("isLocked")
     private boolean isLocked;
     private CategoryDTO category;
     private ForumDTO parent;
