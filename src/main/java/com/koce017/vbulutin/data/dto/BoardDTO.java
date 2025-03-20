@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardDTO {
-    private Long id;
+    private long id;
     private String title;
     private String slug;
     private String description;

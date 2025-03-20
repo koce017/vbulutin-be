@@ -1,7 +1,6 @@
 package com.koce017.vbulutin.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.koce017.vbulutin.data.entity.Topic;
 import lombok.*;
 
 import java.util.List;
@@ -12,15 +11,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ForumDTO {
-    private Long id;
+    private long id;
     private String title;
     private String slug;
     private String description;
-    private Long position;
+    private long position;
     @JsonProperty("isLocked")
     private boolean isLocked;
     private CategoryDTO category;
     private ForumDTO parent;
-    private List<Topic> topics;
+    private List<TopicDTO> topics;
     private List<ForumDTO> children;
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TopicDTO {
-    private Long id;
+    private long id;
     private String title;
     private String slug;
     @JsonProperty("isLocked")
@@ -23,5 +23,5 @@ public class TopicDTO {
     private LocalDateTime deletedAt;
     private Forum forum;
     private Post solution;
-    private List<Post> posts;
+    private List<PostDTO> posts;
 }

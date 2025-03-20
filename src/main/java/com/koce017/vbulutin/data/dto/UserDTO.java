@@ -1,6 +1,5 @@
 package com.koce017.vbulutin.data.dto;
 
-import com.koce017.vbulutin.data.entity.Board;
 import lombok.*;
 
 import java.util.List;
@@ -11,9 +10,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    private Long id;
+    private long id;
     private String email;
     private String username;
     private String password;
-    private List<Board> boards;
+    private List<BoardDTO> boards;
 }

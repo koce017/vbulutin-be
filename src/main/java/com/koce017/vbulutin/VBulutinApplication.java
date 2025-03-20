@@ -46,7 +46,7 @@ public class VBulutinApplication {
 
 			List<User> users = userRepository.findAll();
 
-			for (long i = 1; i <= 5; ++i) {
+			for (long i = 1; i <= 2; ++i) {
 				String title = sentence();
 				Board board = Board.builder()
 						.title(title)
