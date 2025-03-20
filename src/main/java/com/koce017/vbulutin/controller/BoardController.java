@@ -23,7 +23,7 @@ public class BoardController {
     }
 
     @GetMapping("/{slug}")
-    public BoardDTO findBoardHome(@PathVariable String slug) {
-        return boardService.findBoardHome(slug);
+    public BoardDTO findBySlug(@PathVariable String slug) {
+        return boardService.findBySlug(slug);
     }
 }

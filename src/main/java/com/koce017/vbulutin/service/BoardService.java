@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface BoardService {
     List<BoardDTO> findAll();
-    BoardDTO findBoardHome(String slug);
+    BoardDTO findBySlug(String slug);
 }

@@ -26,12 +26,16 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO findBySlug(String slug) {
         Category category = categoryRepository.findBySlug(slug)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find category + " + slug));
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Category " + slug + " does not exist."));
+        return toCategoryDTO(category);
+    }
 
+    public CategoryDTO toCategoryDTO(Category category) {
         CategoryDTO categoryDTO = CategoryDTO.builder()
                 .id(category.getId())
                 .title(category.getTitle())
                 .slug(category.getSlug())
+                .description(category.getDescription())
                 .forums(new ArrayList<>())
                 .board(BoardDTO.builder()
                         .id(category.getBoard().getId())
@@ -58,7 +62,6 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         return categoryDTO;
-
     }
 
     private ForumDTO toForumDTO(Forum forum) {
@@ -66,6 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .id(forum.getId())
                 .title(forum.getTitle())
                 .slug(forum.getSlug())
+                .description(forum.getDescription())
                 .isLocked(forum.isLocked())
                 .children(new ArrayList<>())
                 .build();
