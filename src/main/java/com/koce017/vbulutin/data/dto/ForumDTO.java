@@ -2,7 +2,6 @@ package com.koce017.vbulutin.data.dto;
 
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -19,5 +18,5 @@ public class ForumDTO {
     private boolean isLocked;
     private CategoryDTO category;
     private ForumDTO parent;
-    private List<ForumDTO> children = new ArrayList<>();
+    private List<ForumDTO> children;
 }

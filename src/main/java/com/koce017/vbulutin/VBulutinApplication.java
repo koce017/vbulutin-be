@@ -52,7 +52,7 @@ public class VBulutinApplication {
 						.title(faker.book().title())
 						.isVisible(random.nextBoolean())
 						.build();
-				board.setSlug(slugify.slugify(board.getTitle()) + "." + System.currentTimeMillis());
+				board.setSlug(slugify.slugify(board.getTitle()));
 				boardRepository.save(board);
 
 				for (long j = 1; j <= 3; ++j) {
@@ -68,18 +68,22 @@ public class VBulutinApplication {
 						Forum forum = Forum.builder()
 								.title(faker.book().title())
 								.category(category)
+								.isLocked(random.nextBoolean())
 								.position(k)
 								.build();
 						forum.setSlug(slugify.slugify(forum.getTitle()) + "." + System.currentTimeMillis());
 						forumRepository.save(forum);
 
-						Forum subforum = Forum.builder()
-								.title(faker.book().title())
-								.category(category)
-								.position(1L)
-								.build();
-						subforum.setSlug(slugify.slugify(subforum.getTitle()) + "." + System.currentTimeMillis());
-						forumRepository.save(subforum);
+						if (k % 2 == 0) {
+							Forum subforum = Forum.builder()
+									.title(faker.book().title())
+									.category(category)
+									.parent(forum)
+									.position(1L)
+									.build();
+							subforum.setSlug(slugify.slugify(subforum.getTitle()) + "." + System.currentTimeMillis());
+							forumRepository.save(subforum);
+						}
 					}
 
 				}
