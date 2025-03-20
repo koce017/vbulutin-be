@@ -1,4 +1,4 @@
-package com.koce017.vbulutin.entity;
+package com.koce017.vbulutin.data.entity;
 
 import jakarta.persistence.*;
 

@@ -2,10 +2,10 @@ package com.koce017.vbulutin;
 
 import com.github.javafaker.Faker;
 import com.github.slugify.Slugify;
-import com.koce017.vbulutin.entity.Board;
-import com.koce017.vbulutin.entity.Category;
-import com.koce017.vbulutin.entity.Forum;
-import com.koce017.vbulutin.entity.User;
+import com.koce017.vbulutin.data.entity.Board;
+import com.koce017.vbulutin.data.entity.Category;
+import com.koce017.vbulutin.data.entity.Forum;
+import com.koce017.vbulutin.data.entity.User;
 import com.koce017.vbulutin.repository.BoardRepository;
 import com.koce017.vbulutin.repository.CategoryRepository;
 import com.koce017.vbulutin.repository.ForumRepository;
@@ -14,6 +14,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.util.Random;
 
 @SpringBootApplication
 public class VBulutinApplication {
@@ -44,6 +46,7 @@ public class VBulutinApplication {
 				board.setTitle(faker.name().title());
 				board.setSlug(slugify.slugify(board.getTitle()) + "." + i);
 				board.setOwner(user);
+				board.setVisible(new Random().nextBoolean());
 				boardRepository.save(board);
 
 				for (long j = 1; j <= 3; ++j) {
