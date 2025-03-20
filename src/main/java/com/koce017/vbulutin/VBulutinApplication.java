@@ -10,6 +10,7 @@ import com.koce017.vbulutin.repository.BoardRepository;
 import com.koce017.vbulutin.repository.CategoryRepository;
 import com.koce017.vbulutin.repository.ForumRepository;
 import com.koce017.vbulutin.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.Random;
 
+@Slf4j
 @SpringBootApplication
 public class VBulutinApplication {
 
@@ -37,54 +39,47 @@ public class VBulutinApplication {
 			Faker faker = Faker.instance();
 			Slugify slugify = Slugify.builder().lowerCase(true).build();
 
-			for (long i = 1; i <= 5; ++i) {
-				User user = new User();
-				user.setUsername(faker.name().username());
-				user.setPassword(faker.animal().name());
-				user.setEmail(faker.internet().emailAddress());
-				userRepository.save(user);
+			for (long i = 1; i <= 2; ++i) {
+				User owner = User.builder()
+						.username(faker.name().username())
+						.password(faker.animal().name())
+						.email(faker.internet().emailAddress())
+						.build();
+				userRepository.save(owner);
 
-				Board board = new Board();
-				board.setTitle(faker.book().title());
+				Board board = Board.builder()
+						.owner(owner)
+						.title(faker.book().title())
+						.isVisible(random.nextBoolean())
+						.build();
 				board.setSlug(slugify.slugify(board.getTitle()) + "." + System.currentTimeMillis());
-				board.setOwner(user);
-				board.setVisible(random.nextBoolean());
 				boardRepository.save(board);
 
-				for (long j = 1; j <= 2; ++j) {
-					Category category = new Category();
-					category.setTitle(faker.book().title());
+				for (long j = 1; j <= 3; ++j) {
+					Category category = Category.builder()
+							.position(j)
+							.title(faker.book().title())
+							.board(board)
+							.build();
 					category.setSlug(slugify.slugify(category.getTitle()) + "." + System.currentTimeMillis());
-					category.setBoard(board);
-					category.setPosition(j);
 					categoryRepository.save(category);
 
-					for (long k = 1; k <= 2; ++k) {
-						Forum forum = new Forum();
-						forum.setTitle(faker.book().title());
+					for (long k = 1; k <= 5; ++k) {
+						Forum forum = Forum.builder()
+								.title(faker.book().title())
+								.category(category)
+								.position(k)
+								.build();
 						forum.setSlug(slugify.slugify(forum.getTitle()) + "." + System.currentTimeMillis());
-						forum.setCategory(category);
-						forum.setPosition(k);
 						forumRepository.save(forum);
 
-						if (k % 2 == 0) {
-							Forum subforum1 = new Forum();
-							subforum1.setTitle(faker.book().title());
-							subforum1.setSlug(slugify.slugify(subforum1.getTitle()) + "." + System.currentTimeMillis());
-							subforum1.setCategory(category);
-							subforum1.setPosition(1L);
-							subforum1.setParent(forum);
-							forumRepository.save(subforum1);
-
-							Forum subforum2 = new Forum();
-							subforum2.setTitle(faker.book().title());
-							subforum2.setSlug(slugify.slugify(subforum2.getTitle()) + "." + System.currentTimeMillis());
-							subforum2.setCategory(category);
-							subforum2.setPosition(2L);
-							subforum2.setParent(forum);
-							forumRepository.save(subforum2);
-						}
-
+						Forum subforum = Forum.builder()
+								.title(faker.book().title())
+								.category(category)
+								.position(1L)
+								.build();
+						subforum.setSlug(slugify.slugify(subforum.getTitle()) + "." + System.currentTimeMillis());
+						forumRepository.save(subforum);
 					}
 
 				}

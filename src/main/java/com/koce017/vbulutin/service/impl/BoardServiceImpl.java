@@ -37,42 +37,47 @@ public class BoardServiceImpl implements BoardService {
     public BoardDTO findBoardHome(String slug) {
         Board board = boardRepository.findBySlug(slug).orElseThrow();
 
-        BoardDTO boardDTO = new BoardDTO();
-        boardDTO.setId(board.getId());
-        boardDTO.setSlug(board.getSlug());
-        boardDTO.setTitle(board.getTitle());
-        boardDTO.setDescription(board.getDescription());
-        boardDTO.setVisible(board.isVisible());
+        BoardDTO boardDTO = BoardDTO.builder()
+                .id(board.getId())
+                .title(board.getTitle())
+                .slug(board.getSlug())
+                .description(board.getDescription())
+                .isVisible(board.isVisible())
+                .build();
+
         boardDTO.setCategories(
                 board.getCategories().stream().map(category ->
                 {
-                    CategoryDTO categoryDTO = new CategoryDTO();
-                    categoryDTO.setId(category.getId());
-                    categoryDTO.setTitle(category.getTitle());
-                    categoryDTO.setSlug(category.getSlug());
+                    CategoryDTO categoryDTO = CategoryDTO.builder()
+                            .id(category.getId())
+                            .title(category.getTitle())
+                            .slug(category.getSlug())
+                            .build();
 
-                    categoryDTO.setForums(category.getForums().stream().map(forum ->
-                    {
-                        ForumDTO forumDTO = new ForumDTO();
-                        forumDTO.setId(forum.getId());
-                        forumDTO.setTitle(forum.getTitle());
-                        forumDTO.setSlug(forum.getSlug());
-                        forumDTO.setLocked(forum.isLocked());
+//                    categoryDTO.setForums(category.getForums().stream().map(forum ->
+//                    {
+//                        ForumDTO forumDTO = ForumDTO.builder()
+//                                .id(forum.getId())
+//                                .title(forum.getTitle())
+//                                .slug(forum.getSlug())
+//                                .isLocked(forum.isLocked())
+//                                .position(forum.getPosition())
+//                                .build();
 
-                        forumDTO.setChildren(
-                                forum.getChildren().stream().map(child ->
-                                {
-                                    ForumDTO childDTO = new ForumDTO();
-                                    childDTO.setId(forum.getId());
-                                    childDTO.setTitle(forum.getTitle());
-                                    childDTO.setSlug(forum.getSlug());
-                                    return childDTO;
-                                }).toList()
-                        );
+//                        forumDTO.setChildren(
+//                                forum.getChildren().stream().map(child ->
+//                                        ForumDTO.builder()
+//                                                .id(forum.getId())
+//                                                .title(forum.getTitle())
+//                                                .slug(forum.getSlug())
+//                                                .position(forum.getPosition())
+//                                                .build())
+//                                        .toList()
+//                        );
 
-                        return forumDTO;
-
-                    }).toList());
+//                        return forumDTO;
+//
+//                    }).toList());
 
                     return categoryDTO;
 
