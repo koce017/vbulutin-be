@@ -29,9 +29,6 @@ public class Topic {
     @Column(nullable = false)
     private boolean isLocked;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
     private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,10 +41,5 @@ public class Topic {
     @OrderBy("createdAt ASC")
     @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
-
-    @PrePersist
-    private void prePersist() {
-        createdAt = LocalDateTime.now();
-    }
 
 }

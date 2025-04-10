@@ -1,8 +1,6 @@
 package com.koce017.vbulutin.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.koce017.vbulutin.data.entity.Forum;
-import com.koce017.vbulutin.data.entity.Post;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,9 +17,8 @@ public class TopicDTO {
     private String slug;
     @JsonProperty("isLocked")
     private boolean isLocked;
-    private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
-    private Forum forum;
-    private Post solution;
+    private ForumDTO forum;
+    private PostDTO solution;
     private List<PostDTO> posts;
 }
