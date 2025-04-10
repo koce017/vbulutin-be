@@ -4,7 +4,6 @@ import com.github.javafaker.Faker;
 import com.github.slugify.Slugify;
 import com.koce017.vbulutin.data.entity.*;
 import com.koce017.vbulutin.repository.*;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,17 +12,12 @@ import org.springframework.context.annotation.Bean;
 import java.util.List;
 import java.util.Random;
 
-@Slf4j
 @SpringBootApplication
 public class VBulutinApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(VBulutinApplication.class, args);
 	}
-
-	private final Random random = new Random();
-	private final Faker faker = Faker.instance();
-	private final Slugify slugify = Slugify.builder().lowerCase(true).build();
 
 	@Bean
 	public CommandLineRunner runner(
@@ -34,6 +28,10 @@ public class VBulutinApplication {
 			TopicRepository topicRepository,
 			PostRepository postRepository
 	) {
+		Random random = new Random();
+		Faker faker = Faker.instance();
+		Slugify slugify = Slugify.builder().lowerCase(true).build();
+
 		return args -> {
 			for (long i = 1; i <= 5; ++i) {
 				User owner = User.builder()
@@ -47,7 +45,7 @@ public class VBulutinApplication {
 			List<User> users = userRepository.findAll();
 
 			for (long i = 1; i <= 2; ++i) {
-				String title = sentence();
+				String title = fakeTitle();
 				Board board = Board.builder()
 						.title(title)
 						.slug(slugify.slugify(title))
@@ -61,7 +59,7 @@ public class VBulutinApplication {
 			for (Board board : boardRepository.findAll()) {
 
 				for (long i = 1; i <= 3; ++i) {
-					String title = sentence();
+					String title = fakeTitle();
 					Category category = Category.builder()
 							.title(title)
 							.slug(slugify.slugify(title))
@@ -78,7 +76,7 @@ public class VBulutinApplication {
 
 				for (long i = 1; i < 3; ++i) {
 
-					String title = sentence();
+					String title = fakeTitle();
 					Forum forum = Forum.builder()
 							.title(title)
 							.slug(slugify.slugify(title))
@@ -92,7 +90,7 @@ public class VBulutinApplication {
 					if (random.nextBoolean()) {
 
 						for (long j = 1; j <= random.nextInt(1, 3); ++j) {
-							title = sentence();
+							title = fakeTitle();
 							Forum subforum = Forum.builder()
 									.title(title)
 									.slug(slugify.slugify(title))
@@ -112,7 +110,7 @@ public class VBulutinApplication {
 			for (Forum forum : forumRepository.findAll()) {
 
 				for (long i = 1; i <= 3; ++i) {
-					String title = sentence();
+					String title = fakeTitle();
 					Topic topic = Topic.builder()
 							.title(title)
 							.slug(slugify.slugify(title))
@@ -145,8 +143,8 @@ public class VBulutinApplication {
 		};
 	}
 	
-	private String sentence() {
-		return faker.lorem().sentence().replace(".", "");
+	private String fakeTitle() {
+		return Faker.instance().lorem().sentence().replace(".", "");
 	}
 
 }
