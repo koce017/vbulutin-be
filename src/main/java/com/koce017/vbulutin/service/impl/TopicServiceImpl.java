@@ -68,6 +68,7 @@ public class TopicServiceImpl implements TopicService {
                 .user(UserDTO.builder()
                         .id(post.getUser().getId())
                         .username(post.getUser().getUsername())
+                        .signature(post.getUser().getSignature())
                         .build())
                 .createdAt(post.getCreatedAt())
                 .build();

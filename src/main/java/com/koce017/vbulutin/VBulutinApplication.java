@@ -33,13 +33,18 @@ public class VBulutinApplication {
 		Slugify slugify = Slugify.builder().lowerCase(true).build();
 
 		return args -> {
+
 			for (long i = 1; i <= 5; ++i) {
-				User owner = User.builder()
+				User user = User.builder()
 						.username(faker.name().username())
 						.password(faker.animal().name())
 						.email(faker.internet().emailAddress())
 						.build();
-				userRepository.save(owner);
+
+				if (random.nextBoolean())
+					user.setSignature(faker.lorem().paragraph());
+
+				userRepository.save(user);
 			}
 
 			List<User> users = userRepository.findAll();

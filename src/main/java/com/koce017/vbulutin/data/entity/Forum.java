@@ -45,6 +45,7 @@ public class Forum {
     private List<Topic> topics = new ArrayList<>();
 
     @Builder.Default
+    @OrderBy("position ASC")
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private List<Forum> children = new ArrayList<>();
 

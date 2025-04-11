@@ -28,6 +28,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Lob
+    private String signature;
+
     @Builder.Default
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private List<Board> boards = new ArrayList<>();
