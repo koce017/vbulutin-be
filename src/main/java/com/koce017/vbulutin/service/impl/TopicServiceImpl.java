@@ -1,8 +1,6 @@
 package com.koce017.vbulutin.service.impl;
 
-import com.koce017.vbulutin.data.dto.PostDTO;
-import com.koce017.vbulutin.data.dto.TopicDTO;
-import com.koce017.vbulutin.data.dto.UserDTO;
+import com.koce017.vbulutin.data.dto.*;
 import com.koce017.vbulutin.data.entity.Post;
 import com.koce017.vbulutin.data.entity.Topic;
 import com.koce017.vbulutin.repository.TopicRepository;
@@ -21,20 +19,46 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public TopicDTO findBySlug(String slug) {
-        Topic topic = topicRepository.findBySlugAndDeletedAtIsNull(slug)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Topic " + slug + " does not exist."));  // TODO: admins should be able to see deleted items
+        Topic topic = topicRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Topic " + slug + " does not exist."));
 
-        return TopicDTO.builder()
+        ForumDTO forumDTO = ForumDTO.builder()
+                .slug(topic.getForum().getSlug())
+                .title(topic.getForum().getTitle())
+                .category(CategoryDTO.builder()
+                        .slug(topic.getForum().getCategory().getSlug())
+                        .title(topic.getForum().getCategory().getTitle())
+                        .board(BoardDTO.builder()
+                                .slug(topic.getForum().getCategory().getBoard().getSlug())
+                                .title(topic.getForum().getCategory().getBoard().getTitle())
+                                .build())
+                        .build())
+                .build();
+
+        if (topic.getForum().getParent() != null) {
+            forumDTO.setParent(ForumDTO.builder()
+                    .slug(topic.getForum().getParent().getSlug())
+                    .title(topic.getForum().getParent().getTitle())
+                    .build()
+            );
+        }
+
+        TopicDTO topicDTO = TopicDTO.builder()
                 .id(topic.getId())
+                .forum(forumDTO)
                 .title(topic.getTitle())
                 .slug(topic.getSlug())
-                .isLocked(topic.isLocked())
-                .solution(toDto(topic.getSolution()))
+                .isLocked(topic.getIsLocked())
                 .posts(topic.getPosts().stream()
-                        .filter(post -> post.getDeletedAt() == null) // TODO: admins should be able to see deleted items
                         .map(this::toDto)
                         .toList()
                 ).build();
+
+        if (topic.getSolution() != null) {
+            topicDTO.setSolution(toDto(topic.getSolution()));
+        }
+
+        return topicDTO;
     }
 
     private PostDTO toDto(Post post) {

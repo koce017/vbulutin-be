@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Long> {
-    Optional<Topic> findBySlugAndDeletedAtIsNull(String slug);
+    Optional<Topic> findBySlug(String slug);
 }
