@@ -70,7 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .title(forum.getTitle())
                 .slug(forum.getSlug())
                 .description(forum.getDescription())
-                .isLocked(forum.isLocked())
+                .isLocked(forum.getIsLocked())
                 .children(new ArrayList<>())
                 .build();
     }

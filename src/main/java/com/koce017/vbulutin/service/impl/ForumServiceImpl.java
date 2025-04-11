@@ -33,7 +33,7 @@ public class ForumServiceImpl implements ForumService {
                 .slug(forum.getSlug())
                 .description(forum.getDescription())
                 .position(forum.getPosition())
-                .isLocked(forum.isLocked())
+                .isLocked(forum.getIsLocked())
                 .category(
                         CategoryDTO.builder()
                                 .id(category.getId())

@@ -32,7 +32,7 @@ public class Forum {
     private Long position;
 
     @Column(nullable = false)
-    private boolean isLocked;
+    private Boolean isLocked;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;

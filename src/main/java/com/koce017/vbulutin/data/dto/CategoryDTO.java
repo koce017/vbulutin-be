@@ -11,11 +11,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryDTO {
-    private long id;
+    private Long id;
     private String title;
     private String slug;
     private String description;
-    private long position;
+    private Long position;
     private BoardDTO board;
     private List<ForumDTO> forums;
 }

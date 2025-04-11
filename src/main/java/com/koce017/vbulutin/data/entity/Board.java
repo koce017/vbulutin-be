@@ -29,7 +29,7 @@ public class Board {
     private String description;
 
     @Column(nullable = false)
-    private boolean isVisible;
+    private Boolean isHidden;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;

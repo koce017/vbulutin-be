@@ -31,7 +31,7 @@ public class BoardServiceImpl implements BoardService {
                         .slug(board.getSlug())
                         .title(board.getTitle())
                         .description(board.getDescription())
-                        .isVisible(board.isVisible())
+                        .isHidden(board.getIsHidden())
                         .build()
         ).toList();
     }
@@ -46,7 +46,7 @@ public class BoardServiceImpl implements BoardService {
                 .title(board.getTitle())
                 .slug(board.getSlug())
                 .description(board.getDescription())
-                .isVisible(board.isVisible())
+                .isHidden(board.getIsHidden())
                 .categories(board.getCategories().stream().map(categoryServiceImpl::toCategoryDTO).toList())
                 .build();
     }

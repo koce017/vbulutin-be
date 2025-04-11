@@ -28,8 +28,8 @@ public class VBulutinApplication {
 			TopicRepository topicRepository,
 			PostRepository postRepository
 	) {
+		Faker faker = new Faker();
 		Random random = new Random();
-		Faker faker = Faker.instance();
 		Slugify slugify = Slugify.builder().lowerCase(true).build();
 
 		return args -> {
@@ -50,7 +50,7 @@ public class VBulutinApplication {
 						.title(title)
 						.slug(slugify.slugify(title))
 						.description(faker.lorem().paragraph())
-						.isVisible(random.nextBoolean())
+						.isHidden(random.nextBoolean())
 						.owner(users.get(random.nextInt(users.size())))
 						.build();
 				boardRepository.save(board);
@@ -95,6 +95,7 @@ public class VBulutinApplication {
 									.title(title)
 									.slug(slugify.slugify(title))
 									.description(faker.lorem().paragraph())
+									.isLocked(random.nextBoolean())
 									.category(category)
 									.parent(forum)
 									.position(j)

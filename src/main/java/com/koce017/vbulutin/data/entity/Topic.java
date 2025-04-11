@@ -27,7 +27,7 @@ public class Topic {
     private String slug;
 
     @Column(nullable = false)
-    private boolean isLocked;
+    private Boolean isLocked;
 
     private LocalDateTime deletedAt;
 

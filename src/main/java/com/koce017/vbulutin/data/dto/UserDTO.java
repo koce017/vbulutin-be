@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    private long id;
+    private Long id;
     private String email;
     private String username;
     private List<BoardDTO> boards;

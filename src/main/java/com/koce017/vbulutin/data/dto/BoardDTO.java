@@ -11,12 +11,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardDTO {
-    private long id;
+    private Long id;
     private String title;
     private String slug;
     private String description;
-    @JsonProperty("isVisible")
-    private boolean isVisible;
+    @JsonProperty("isHidden")
+    private Boolean isHidden;
     private UserDTO owner;
     private List<CategoryDTO> categories;
 }

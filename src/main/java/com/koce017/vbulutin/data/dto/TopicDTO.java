@@ -12,11 +12,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TopicDTO {
-    private long id;
+    private Long id;
     private String title;
     private String slug;
     @JsonProperty("isLocked")
-    private boolean isLocked;
+    private Boolean isLocked;
     private LocalDateTime deletedAt;
     private ForumDTO forum;
     private PostDTO solution;
