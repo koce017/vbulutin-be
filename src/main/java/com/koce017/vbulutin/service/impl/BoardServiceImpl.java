@@ -28,11 +28,10 @@ public class BoardServiceImpl implements BoardService {
         List<Board> boards = boardRepository.findAllByOrderByTitleAsc();
         return boards.stream().map(board ->
                 BoardDTO.builder()
-                        .id(board.getId())
                         .slug(board.getSlug())
                         .title(board.getTitle())
                         .description(board.getDescription())
-                        .isHidden(board.getIsHidden())
+                        .isHidden(board.getIsHidden()) // TODO: show hidden boards only to admins
                         .owner(UserDTO.builder().username(board.getOwner().getUsername()).build())
                         .build()
         ).toList();
@@ -44,7 +43,6 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Board " + slug + " does not exist."));
 
         return BoardDTO.builder()
-                .id(board.getId())
                 .title(board.getTitle())
                 .slug(board.getSlug())
                 .description(board.getDescription())

@@ -13,7 +13,7 @@ public class PostDTO {
     private Long id;
     private String content;
     private TopicDTO topic;
-    private UserDTO user;
+    private UserDTO poster;
     private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
 }

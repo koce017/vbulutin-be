@@ -1,6 +1,5 @@
 package com.koce017.vbulutin.data.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.LocalDateTime;

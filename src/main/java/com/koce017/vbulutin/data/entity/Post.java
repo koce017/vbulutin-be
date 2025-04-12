@@ -25,7 +25,7 @@ public class Post {
     private Topic topic;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private User poster;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

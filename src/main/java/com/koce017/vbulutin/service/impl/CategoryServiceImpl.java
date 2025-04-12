@@ -28,22 +28,26 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO findBySlug(String slug) {
         Category category = categoryRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Category " + slug + " does not exist."));
-        return toCategoryDTO(category);
+
+        CategoryDTO categoryDTO = toCategoryDTO(category);
+
+        categoryDTO.setBoard(
+                BoardDTO.builder()
+                        .slug(category.getBoard().getSlug())
+                        .title(category.getBoard().getTitle())
+                        .isHidden(category.getBoard().getIsHidden())
+                        .build()
+        );
+
+        return categoryDTO;
     }
 
     public CategoryDTO toCategoryDTO(Category category) {
         CategoryDTO categoryDTO = CategoryDTO.builder()
-                .id(category.getId())
                 .title(category.getTitle())
                 .slug(category.getSlug())
                 .description(category.getDescription())
                 .forums(new ArrayList<>())
-                .board(BoardDTO.builder()
-                        .id(category.getBoard().getId())
-                        .slug(category.getBoard().getSlug())
-                        .title(category.getBoard().getTitle())
-                        .build()
-                )
                 .build();
 
         Map<Long, ForumDTO> rootForums = new HashMap<>();
@@ -52,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
             if (forum.getParent() == null) {
                 ForumDTO forumDTO = toForumDTO(forum);
                 categoryDTO.getForums().add(forumDTO);
-                rootForums.put(forumDTO.getId(), forumDTO);
+                rootForums.put(forum.getId(), forumDTO);
             }
         }
 
@@ -69,19 +73,17 @@ public class CategoryServiceImpl implements CategoryService {
         Post lastPost = postRepository.findFirstByTopicForumIdOrderByCreatedAtDesc(forum.getId());
 
         return ForumDTO.builder()
-                .id(forum.getId())
                 .title(forum.getTitle())
                 .slug(forum.getSlug())
                 .description(forum.getDescription())
                 .isLocked(forum.getIsLocked())
                 .lastPost(PostDTO.builder()
-                        .id(lastPost.getId())
                         .topic(TopicDTO.builder()
                                 .slug(lastPost.getTopic().getSlug())
                                 .title(lastPost.getTopic().getTitle())
                                 .build())
-                        .user(UserDTO.builder()
-                                .username(lastPost.getUser().getUsername())
+                        .poster(UserDTO.builder()
+                                .username(lastPost.getPoster().getUsername())
                                 .build())
                         .createdAt(lastPost.getCreatedAt())
                         .build())

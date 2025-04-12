@@ -116,7 +116,7 @@ public class VBulutinApplication {
 
 			for (Forum forum : forumRepository.findAll()) {
 
-				for (long i = 1; i <= 3; ++i) {
+				for (long i = 1; i <= random.nextInt(6); ++i) {
 					String title = fakeTitle();
 					Topic topic = Topic.builder()
 							.title(title)
@@ -131,11 +131,11 @@ public class VBulutinApplication {
 
 			for (Topic topic : topicRepository.findAll()) {
 
-				for (long i = 1; i <= 8; ++i) {
+				for (long i = 1; i <= random.nextInt(1, 16); ++i) {
 					Post post = Post.builder()
 							.topic(topic)
 							.content(faker.lorem().paragraph())
-							.user(users.get(random.nextInt(users.size())))
+							.poster(users.get(random.nextInt(users.size())))
 							.createdAt(LocalDateTime.now().plusMinutes(i))
 							.build();
 					postRepository.save(post);
