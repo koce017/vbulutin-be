@@ -131,18 +131,12 @@ public class VBulutinApplication {
 			for (Topic topic : topicRepository.findAll()) {
 
 				for (long i = 1; i <= 3; ++i) {
-
 					Post post = Post.builder()
 							.topic(topic)
 							.content(faker.lorem().paragraph())
 							.user(users.get(random.nextInt(users.size())))
 							.build();
 					postRepository.save(post);
-
-					if (random.nextBoolean() && topic.getSolution() == null) {
-						topic.setSolution(post);
-						topicRepository.save(topic);
-					}
 				}
 			}
 

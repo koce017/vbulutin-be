@@ -54,10 +54,6 @@ public class TopicServiceImpl implements TopicService {
                         .toList()
                 ).build();
 
-        if (topic.getSolution() != null) {
-            topicDTO.setSolution(toDto(topic.getSolution()));
-        }
-
         return topicDTO;
     }
 

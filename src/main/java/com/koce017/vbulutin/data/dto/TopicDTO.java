@@ -19,6 +19,5 @@ public class TopicDTO {
     private Boolean isLocked;
     private LocalDateTime deletedAt;
     private ForumDTO forum;
-    private PostDTO solution;
     private List<PostDTO> posts;
 }

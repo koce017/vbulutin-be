@@ -34,9 +34,6 @@ public class Topic {
     @ManyToOne(fetch = FetchType.LAZY)
     private Forum forum;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Post solution;
-
     @Builder.Default
     @OrderBy("createdAt ASC")
     @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY)
