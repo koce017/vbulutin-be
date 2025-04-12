@@ -15,7 +15,6 @@ public class TopicDTO {
     private Long id;
     private String title;
     private String slug;
-    @JsonProperty("isLocked")
     private Boolean isLocked;
     private PostDTO lastPost;
     private LocalDateTime deletedAt;

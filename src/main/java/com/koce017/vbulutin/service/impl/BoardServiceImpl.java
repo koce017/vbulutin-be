@@ -1,6 +1,7 @@
 package com.koce017.vbulutin.service.impl;
 
 import com.koce017.vbulutin.data.dto.BoardDTO;
+import com.koce017.vbulutin.data.dto.UserDTO;
 import com.koce017.vbulutin.data.entity.Board;
 import com.koce017.vbulutin.repository.BoardRepository;
 import com.koce017.vbulutin.service.BoardService;
@@ -24,7 +25,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardDTO> findAll() {
-        List<Board> boards = boardRepository.findAll();
+        List<Board> boards = boardRepository.findAllByOrderByTitleAsc();
         return boards.stream().map(board ->
                 BoardDTO.builder()
                         .id(board.getId())
@@ -32,6 +33,7 @@ public class BoardServiceImpl implements BoardService {
                         .title(board.getTitle())
                         .description(board.getDescription())
                         .isHidden(board.getIsHidden())
+                        .owner(UserDTO.builder().username(board.getOwner().getUsername()).build())
                         .build()
         ).toList();
     }

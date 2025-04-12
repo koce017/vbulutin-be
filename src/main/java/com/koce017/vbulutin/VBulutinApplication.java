@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Random;
 
@@ -24,11 +23,11 @@ public class VBulutinApplication {
 	@Bean
 	public CommandLineRunner runner(
 			UserRepository userRepository,
+			PostRepository postRepository,
 			BoardRepository boardRepository,
-			CategoryRepository categoryRepository,
 			ForumRepository forumRepository,
 			TopicRepository topicRepository,
-			PostRepository postRepository
+			CategoryRepository categoryRepository
 	) {
 		Faker faker = new Faker();
 		Random random = new Random();

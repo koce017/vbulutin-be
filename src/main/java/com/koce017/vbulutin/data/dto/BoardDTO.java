@@ -15,7 +15,6 @@ public class BoardDTO {
     private String title;
     private String slug;
     private String description;
-    @JsonProperty("isHidden")
     private Boolean isHidden;
     private UserDTO owner;
     private List<CategoryDTO> categories;

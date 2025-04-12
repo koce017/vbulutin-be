@@ -16,7 +16,6 @@ public class ForumDTO {
     private String slug;
     private String description;
     private Long position;
-    @JsonProperty("isLocked")
     private Boolean isLocked;
     private PostDTO lastPost;
     private CategoryDTO category;
