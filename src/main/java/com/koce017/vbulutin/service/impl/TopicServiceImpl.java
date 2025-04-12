@@ -1,7 +1,6 @@
 package com.koce017.vbulutin.service.impl;
 
 import com.koce017.vbulutin.data.dto.*;
-import com.koce017.vbulutin.data.entity.Post;
 import com.koce017.vbulutin.data.entity.Topic;
 import com.koce017.vbulutin.repository.TopicRepository;
 import com.koce017.vbulutin.service.TopicService;
@@ -43,31 +42,25 @@ public class TopicServiceImpl implements TopicService {
             );
         }
 
-        TopicDTO topicDTO = TopicDTO.builder()
+        return TopicDTO.builder()
                 .id(topic.getId())
                 .forum(forumDTO)
                 .title(topic.getTitle())
                 .slug(topic.getSlug())
                 .isLocked(topic.getIsLocked())
                 .posts(topic.getPosts().stream()
-                        .map(this::toDto)
+                        .map(post -> PostDTO.builder()
+                                .id(post.getId())
+                                .content(post.getContent())
+                                .user(UserDTO.builder()
+                                        .id(post.getUser().getId())
+                                        .username(post.getUser().getUsername())
+                                        .signature(post.getUser().getSignature())
+                                        .build())
+                                .createdAt(post.getCreatedAt())
+                                .build())
                         .toList()
                 ).build();
-
-        return topicDTO;
-    }
-
-    private PostDTO toDto(Post post) {
-        return PostDTO.builder()
-                .id(post.getId())
-                .content(post.getContent())
-                .user(UserDTO.builder()
-                        .id(post.getUser().getId())
-                        .username(post.getUser().getUsername())
-                        .signature(post.getUser().getSignature())
-                        .build())
-                .createdAt(post.getCreatedAt())
-                .build();
     }
 
 }

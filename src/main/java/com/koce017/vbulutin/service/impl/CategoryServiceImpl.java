@@ -1,11 +1,11 @@
 package com.koce017.vbulutin.service.impl;
 
-import com.koce017.vbulutin.data.dto.BoardDTO;
-import com.koce017.vbulutin.data.dto.CategoryDTO;
-import com.koce017.vbulutin.data.dto.ForumDTO;
+import com.koce017.vbulutin.data.dto.*;
 import com.koce017.vbulutin.data.entity.Category;
 import com.koce017.vbulutin.data.entity.Forum;
+import com.koce017.vbulutin.data.entity.Post;
 import com.koce017.vbulutin.repository.CategoryRepository;
+import com.koce017.vbulutin.repository.PostRepository;
 import com.koce017.vbulutin.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final PostRepository postRepository;
 
     @Override
     public CategoryDTO findBySlug(String slug) {
@@ -65,12 +66,25 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private ForumDTO toForumDTO(Forum forum) {
+        Post lastPost = postRepository.findFirstByTopicForumIdOrderByCreatedAtDesc(forum.getId());
+
         return ForumDTO.builder()
                 .id(forum.getId())
                 .title(forum.getTitle())
                 .slug(forum.getSlug())
                 .description(forum.getDescription())
                 .isLocked(forum.getIsLocked())
+                .lastPost(PostDTO.builder()
+                        .id(lastPost.getId())
+                        .topic(TopicDTO.builder()
+                                .slug(lastPost.getTopic().getSlug())
+                                .title(lastPost.getTopic().getTitle())
+                                .build())
+                        .user(UserDTO.builder()
+                                .username(lastPost.getUser().getUsername())
+                                .build())
+                        .createdAt(lastPost.getCreatedAt())
+                        .build())
                 .children(new ArrayList<>())
                 .build();
     }

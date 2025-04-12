@@ -18,6 +18,7 @@ public class ForumDTO {
     private Long position;
     @JsonProperty("isLocked")
     private Boolean isLocked;
+    private PostDTO lastPost;
     private CategoryDTO category;
     private ForumDTO parent;
     private List<TopicDTO> topics;
