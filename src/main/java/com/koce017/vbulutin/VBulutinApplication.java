@@ -9,6 +9,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Random;
 
@@ -34,7 +36,7 @@ public class VBulutinApplication {
 
 		return args -> {
 
-			for (long i = 1; i <= 5; ++i) {
+			for (long i = 1; i <= 10; ++i) {
 				User user = User.builder()
 						.username(faker.name().username())
 						.password(faker.animal().name())
@@ -130,11 +132,12 @@ public class VBulutinApplication {
 
 			for (Topic topic : topicRepository.findAll()) {
 
-				for (long i = 1; i <= 3; ++i) {
+				for (long i = 1; i <= 8; ++i) {
 					Post post = Post.builder()
 							.topic(topic)
 							.content(faker.lorem().paragraph())
 							.user(users.get(random.nextInt(users.size())))
+							.createdAt(LocalDateTime.now().plusMinutes(i))
 							.build();
 					postRepository.save(post);
 				}

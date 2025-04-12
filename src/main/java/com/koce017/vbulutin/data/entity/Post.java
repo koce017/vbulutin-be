@@ -32,9 +32,4 @@ public class Post {
 
     private LocalDateTime deletedAt;
 
-    @PrePersist
-    private void prePersist() {
-        createdAt = LocalDateTime.now();
-    }
-
 }
