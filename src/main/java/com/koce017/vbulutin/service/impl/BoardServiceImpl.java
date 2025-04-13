@@ -25,7 +25,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardDTO> findAll() {
-        List<Board> boards = boardRepository.findAllByOrderByTitleAsc();
+        List<Board> boards = boardRepository.findByOrderByOwnerUsernameAscTitleAsc();
         return boards.stream().map(board ->
                 BoardDTO.builder()
                         .slug(board.getSlug())

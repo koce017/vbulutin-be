@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-    List<Board> findAllByOrderByTitleAsc();
     Optional<Board> findBySlug(String slug);
+    List<Board> findByOrderByOwnerUsernameAscTitleAsc();
 }
