@@ -4,7 +4,9 @@ import com.koce017.vbulutin.data.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    Post findFirstByTopicForumIdOrderByCreatedAtDesc(Long forumId);
+    Optional<Post> findFirstByTopicForumIdOrderByCreatedAtDesc(Long forumId);
 }

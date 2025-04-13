@@ -1,9 +1,10 @@
 package com.koce017.vbulutin.service.impl;
 
-import com.koce017.vbulutin.data.dto.*;
+import com.koce017.vbulutin.data.dto.BoardDTO;
+import com.koce017.vbulutin.data.dto.CategoryDTO;
+import com.koce017.vbulutin.data.dto.ForumDTO;
 import com.koce017.vbulutin.data.entity.Category;
 import com.koce017.vbulutin.data.entity.Forum;
-import com.koce017.vbulutin.data.entity.Post;
 import com.koce017.vbulutin.repository.CategoryRepository;
 import com.koce017.vbulutin.repository.PostRepository;
 import com.koce017.vbulutin.service.CategoryService;
@@ -23,6 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final PostRepository postRepository;
+    private final ForumServiceImpl forumServiceImpl;
 
     @Override
     public CategoryDTO findBySlug(String slug) {
@@ -70,25 +72,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private ForumDTO toForumDTO(Forum forum) {
-        Post lastPost = postRepository.findFirstByTopicForumIdOrderByCreatedAtDesc(forum.getId());
-
-        return ForumDTO.builder()
+        ForumDTO forumDTO = ForumDTO.builder()
                 .title(forum.getTitle())
                 .slug(forum.getSlug())
                 .description(forum.getDescription())
                 .isLocked(forum.getIsLocked())
-                .lastPost(PostDTO.builder()
-                        .topic(TopicDTO.builder()
-                                .slug(lastPost.getTopic().getSlug())
-                                .title(lastPost.getTopic().getTitle())
-                                .build())
-                        .poster(UserDTO.builder()
-                                .username(lastPost.getPoster().getUsername())
-                                .build())
-                        .createdAt(lastPost.getCreatedAt())
-                        .build())
                 .children(new ArrayList<>())
                 .build();
+
+        postRepository.findFirstByTopicForumIdOrderByCreatedAtDesc(forum.getId())
+                .ifPresent(post -> forumDTO.setLastPost(forumServiceImpl.toLastPostDTO(post)));
+
+        return forumDTO;
     }
 
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -31,21 +32,21 @@ public class ForumServiceImpl implements ForumService {
 
         List<Topic> topics = topicRepository.findTopicsByForumOrderedByLastPost(forum.getId());
 
-        Post lastPost = postRepository.findFirstByTopicForumIdOrderByCreatedAtDesc(forum.getId());
+        Optional<Post> lastPost = postRepository.findFirstByTopicForumIdOrderByCreatedAtDesc(forum.getId());
 
         for (Forum childForum : forum.getChildren()) {
-            Post childForumLastPost = postRepository.findFirstByTopicForumIdOrderByCreatedAtDesc(childForum.getId());
-            if (childForumLastPost.getCreatedAt().isAfter(lastPost.getCreatedAt()))
+            Optional<Post> childForumLastPost = postRepository.findFirstByTopicForumIdOrderByCreatedAtDesc(childForum.getId());
+            if (childForumLastPost.isPresent() && lastPost.isPresent()
+                    && childForumLastPost.get().getCreatedAt().isAfter(lastPost.get().getCreatedAt())) {
                 lastPost = childForumLastPost;
+            }
         }
 
         ForumDTO forumDTO = ForumDTO.builder()
                 .title(forum.getTitle())
                 .slug(forum.getSlug())
                 .description(forum.getDescription())
-                .position(forum.getPosition())
                 .isLocked(forum.getIsLocked())
-                .lastPost(toLastPostDTO(lastPost))
                 .category(
                         CategoryDTO.builder()
                                 .slug(forum.getCategory().getSlug())
@@ -57,14 +58,20 @@ public class ForumServiceImpl implements ForumService {
                                         .build()
                                 ).build()
                 )
-                .children(forum.getChildren().stream().map(child ->
-                                ForumDTO.builder()
-                                        .title(child.getTitle())
-                                        .slug(child.getSlug())
-                                        .lastPost(toLastPostDTO(postRepository.findFirstByTopicForumIdOrderByCreatedAtDesc(child.getId())))
-                                        .build()
-                        ).toList()
-                )
+                .children(forum.getChildren().stream().map(child -> {
+
+                    ForumDTO childForum = ForumDTO.builder()
+                            .title(child.getTitle())
+                            .slug(child.getSlug())
+                            .isLocked(child.getIsLocked())
+                            .build();
+
+                    postRepository.findFirstByTopicForumIdOrderByCreatedAtDesc(child.getId())
+                            .ifPresent(post -> childForum.setLastPost(toLastPostDTO(post)));
+
+                    return childForum;
+
+                }).toList())
                 .topics(topics.stream().map(topic ->
                         TopicDTO.builder()
                                 .title(topic.getTitle())
@@ -84,7 +91,7 @@ public class ForumServiceImpl implements ForumService {
         return forumDTO;
     }
 
-    private PostDTO toLastPostDTO(Post post) {
+    public PostDTO toLastPostDTO(Post post) {
         return PostDTO.builder()
                 .topic(TopicDTO.builder()
                         .slug(post.getTopic().getSlug())
