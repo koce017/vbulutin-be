@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +28,8 @@ public class VBulutinApplication {
 			BoardRepository boardRepository,
 			ForumRepository forumRepository,
 			TopicRepository topicRepository,
-			CategoryRepository categoryRepository
+			CategoryRepository categoryRepository,
+			PasswordEncoder passwordEncoder
 	) {
 		Faker faker = new Faker();
 		Random random = new Random();
@@ -38,8 +40,8 @@ public class VBulutinApplication {
 			for (long i = 1; i <= 10; ++i) {
 				User user = User.builder()
 						.username(faker.name().username())
-						.password(faker.animal().name())
 						.email(faker.internet().emailAddress())
+						.password(passwordEncoder.encode("password"))
 						.build();
 
 				if (random.nextBoolean())
