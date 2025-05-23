@@ -1,7 +1,7 @@
 package com.koce017.vbulutin.service;
 
-import com.koce017.vbulutin.data.dto.CategoryDTO;
+import com.koce017.vbulutin.data.dto.CategoryDto;
 
 public interface CategoryService {
-    CategoryDTO findBySlug(String slug);
+    CategoryDto findBySlug(String slug);
 }

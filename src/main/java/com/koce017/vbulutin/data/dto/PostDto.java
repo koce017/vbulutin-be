@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostDTO {
+public class PostDto {
     private Long id;
     private String content;
-    private TopicDTO topic;
-    private UserDTO poster;
+    private TopicDto topic;
+    private UserDto poster;
     private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
 }

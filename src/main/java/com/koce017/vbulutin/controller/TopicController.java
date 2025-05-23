@@ -1,6 +1,6 @@
 package com.koce017.vbulutin.controller;
 
-import com.koce017.vbulutin.data.dto.TopicDTO;
+import com.koce017.vbulutin.data.dto.TopicDto;
 import com.koce017.vbulutin.service.TopicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ public class TopicController {
     private final TopicService topicService;
 
     @GetMapping("/{slug}")
-    public TopicDTO findBySlug(@PathVariable String slug) {
+    public TopicDto findBySlug(@PathVariable String slug) {
         return topicService.findBySlug(slug);
     }
 

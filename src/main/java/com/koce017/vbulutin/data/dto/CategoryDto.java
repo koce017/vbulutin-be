@@ -1,8 +1,8 @@
 package com.koce017.vbulutin.data.dto;
 
+
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -10,13 +10,13 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TopicDTO {
+public class CategoryDto {
     private Long id;
     private String title;
     private String slug;
-    private Boolean isLocked;
-    private PostDTO lastPost;
-    private LocalDateTime deletedAt;
-    private ForumDTO forum;
-    private List<PostDTO> posts;
+    private String description;
+    private Long position;
+    private BoardDto board;
+    private List<ForumDto> forums;
 }
+

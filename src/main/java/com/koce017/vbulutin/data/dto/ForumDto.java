@@ -9,12 +9,16 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardDTO {
+public class ForumDto {
     private Long id;
     private String title;
     private String slug;
     private String description;
-    private Boolean isHidden;
-    private UserDTO owner;
-    private List<CategoryDTO> categories;
+    private Long position;
+    private Boolean isLocked;
+    private PostDto lastPost;
+    private CategoryDto category;
+    private ForumDto parent;
+    private List<TopicDto> topics;
+    private List<ForumDto> children;
 }

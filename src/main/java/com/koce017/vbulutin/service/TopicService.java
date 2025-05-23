@@ -1,7 +1,7 @@
 package com.koce017.vbulutin.service;
 
-import com.koce017.vbulutin.data.dto.TopicDTO;
+import com.koce017.vbulutin.data.dto.TopicDto;
 
 public interface TopicService {
-    TopicDTO findBySlug(String slug);
+    TopicDto findBySlug(String slug);
 }

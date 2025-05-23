@@ -9,10 +9,10 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserDto {
     private Long id;
     private String email;
     private String username;
     private String signature;
-    private List<BoardDTO> boards;
+    private List<BoardDto> boards;
 }

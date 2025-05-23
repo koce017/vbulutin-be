@@ -26,7 +26,7 @@ public class ForumServiceImpl implements ForumService {
     private final PostRepository postRepository;
 
     @Override
-    public ForumDTO findBySlug(String slug) {
+    public ForumDto findBySlug(String slug) {
         Forum forum = forumRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Forum " + slug + " does not exist."));
 
@@ -42,16 +42,16 @@ public class ForumServiceImpl implements ForumService {
             }
         }
 
-        ForumDTO forumDTO = ForumDTO.builder()
+        ForumDto forumDto = ForumDto.builder()
                 .title(forum.getTitle())
                 .slug(forum.getSlug())
                 .description(forum.getDescription())
                 .isLocked(forum.getIsLocked())
                 .category(
-                        CategoryDTO.builder()
+                        CategoryDto.builder()
                                 .slug(forum.getCategory().getSlug())
                                 .title(forum.getCategory().getTitle())
-                                .board(BoardDTO.builder()
+                                .board(BoardDto.builder()
                                         .title(forum.getCategory().getBoard().getTitle())
                                         .slug(forum.getCategory().getBoard().getSlug())
                                         .isHidden(forum.getCategory().getBoard().getIsHidden())
@@ -60,44 +60,44 @@ public class ForumServiceImpl implements ForumService {
                 )
                 .children(forum.getChildren().stream().map(child -> {
 
-                    ForumDTO childForum = ForumDTO.builder()
+                    ForumDto childForum = ForumDto.builder()
                             .title(child.getTitle())
                             .slug(child.getSlug())
                             .isLocked(child.getIsLocked())
                             .build();
 
                     postRepository.findFirstByTopicForumIdOrderByCreatedAtDesc(child.getId())
-                            .ifPresent(post -> childForum.setLastPost(toLastPostDTO(post)));
+                            .ifPresent(post -> childForum.setLastPost(toLastPostDto(post)));
 
                     return childForum;
 
                 }).toList())
                 .topics(topics.stream().map(topic ->
-                        TopicDTO.builder()
+                        TopicDto.builder()
                                 .title(topic.getTitle())
                                 .slug(topic.getSlug())
-                                .lastPost(toLastPostDTO(topic.getPosts().getLast()))
+                                .lastPost(toLastPostDto(topic.getPosts().getLast()))
                                 .build()).toList()
                 ).build();
 
         if (forum.getParent() != null) {
-            forumDTO.setParent(ForumDTO.builder()
+            forumDto.setParent(ForumDto.builder()
                     .title(forum.getParent().getTitle())
                     .slug(forum.getParent().getSlug())
                     .build()
             );
         }
 
-        return forumDTO;
+        return forumDto;
     }
 
-    public PostDTO toLastPostDTO(Post post) {
-        return PostDTO.builder()
-                .topic(TopicDTO.builder()
+    public PostDto toLastPostDto(Post post) {
+        return PostDto.builder()
+                .topic(TopicDto.builder()
                         .slug(post.getTopic().getSlug())
                         .title(post.getTopic().getTitle())
                         .build())
-                .poster(UserDTO.builder()
+                .poster(UserDto.builder()
                         .username(post.getPoster().getUsername())
                         .build())
                 .createdAt(post.getCreatedAt())

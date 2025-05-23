@@ -1,10 +1,10 @@
 package com.koce017.vbulutin.service;
 
-import com.koce017.vbulutin.data.dto.BoardDTO;
+import com.koce017.vbulutin.data.dto.BoardDto;
 
 import java.util.List;
 
 public interface BoardService {
-    List<BoardDTO> findAll();
-    BoardDTO findBySlug(String slug);
+    List<BoardDto> findAll();
+    BoardDto findBySlug(String slug);
 }

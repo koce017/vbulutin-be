@@ -1,8 +1,8 @@
 package com.koce017.vbulutin.service.impl;
 
-import com.koce017.vbulutin.data.dto.BoardDTO;
-import com.koce017.vbulutin.data.dto.CategoryDTO;
-import com.koce017.vbulutin.data.dto.ForumDTO;
+import com.koce017.vbulutin.data.dto.BoardDto;
+import com.koce017.vbulutin.data.dto.CategoryDto;
+import com.koce017.vbulutin.data.dto.ForumDto;
 import com.koce017.vbulutin.data.entity.Category;
 import com.koce017.vbulutin.data.entity.Forum;
 import com.koce017.vbulutin.repository.CategoryRepository;
@@ -27,52 +27,52 @@ public class CategoryServiceImpl implements CategoryService {
     private final ForumServiceImpl forumServiceImpl;
 
     @Override
-    public CategoryDTO findBySlug(String slug) {
+    public CategoryDto findBySlug(String slug) {
         Category category = categoryRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Category " + slug + " does not exist."));
 
-        CategoryDTO categoryDTO = toCategoryDTO(category);
+        CategoryDto categoryDto = toCategoryDto(category);
 
-        categoryDTO.setBoard(
-                BoardDTO.builder()
+        categoryDto.setBoard(
+                BoardDto.builder()
                         .slug(category.getBoard().getSlug())
                         .title(category.getBoard().getTitle())
                         .isHidden(category.getBoard().getIsHidden())
                         .build()
         );
 
-        return categoryDTO;
+        return categoryDto;
     }
 
-    public CategoryDTO toCategoryDTO(Category category) {
-        CategoryDTO categoryDTO = CategoryDTO.builder()
+    public CategoryDto toCategoryDto(Category category) {
+        CategoryDto categoryDto = CategoryDto.builder()
                 .title(category.getTitle())
                 .slug(category.getSlug())
                 .description(category.getDescription())
                 .forums(new ArrayList<>())
                 .build();
 
-        Map<Long, ForumDTO> rootForums = new HashMap<>();
+        Map<Long, ForumDto> rootForums = new HashMap<>();
 
         for (Forum forum : category.getForums()) {
             if (forum.getParent() == null) {
-                ForumDTO forumDTO = toForumDTO(forum);
-                categoryDTO.getForums().add(forumDTO);
-                rootForums.put(forum.getId(), forumDTO);
+                ForumDto forumDto = toForumDto(forum);
+                categoryDto.getForums().add(forumDto);
+                rootForums.put(forum.getId(), forumDto);
             }
         }
 
         for (Forum forum : category.getForums()) {
             if (forum.getParent() != null) {
-                rootForums.get(forum.getParent().getId()).getChildren().add(toForumDTO(forum));
+                rootForums.get(forum.getParent().getId()).getChildren().add(toForumDto(forum));
             }
         }
 
-        return categoryDTO;
+        return categoryDto;
     }
 
-    private ForumDTO toForumDTO(Forum forum) {
-        ForumDTO forumDTO = ForumDTO.builder()
+    private ForumDto toForumDto(Forum forum) {
+        ForumDto forumDto = ForumDto.builder()
                 .title(forum.getTitle())
                 .slug(forum.getSlug())
                 .description(forum.getDescription())
@@ -81,9 +81,9 @@ public class CategoryServiceImpl implements CategoryService {
                 .build();
 
         postRepository.findFirstByTopicForumIdOrderByCreatedAtDesc(forum.getId())
-                .ifPresent(post -> forumDTO.setLastPost(forumServiceImpl.toLastPostDTO(post)));
+                .ifPresent(post -> forumDto.setLastPost(forumServiceImpl.toLastPostDto(post)));
 
-        return forumDTO;
+        return forumDto;
     }
 
 }

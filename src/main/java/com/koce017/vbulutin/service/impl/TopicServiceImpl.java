@@ -17,17 +17,17 @@ public class TopicServiceImpl implements TopicService {
     private final TopicRepository topicRepository;
 
     @Override
-    public TopicDTO findBySlug(String slug) {
+    public TopicDto findBySlug(String slug) {
         Topic topic = topicRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Topic " + slug + " does not exist."));
 
-        ForumDTO forumDTO = ForumDTO.builder()
+        ForumDto forumDto = ForumDto.builder()
                 .slug(topic.getForum().getSlug())
                 .title(topic.getForum().getTitle())
-                .category(CategoryDTO.builder()
+                .category(CategoryDto.builder()
                         .slug(topic.getForum().getCategory().getSlug())
                         .title(topic.getForum().getCategory().getTitle())
-                        .board(BoardDTO.builder()
+                        .board(BoardDto.builder()
                                 .slug(topic.getForum().getCategory().getBoard().getSlug())
                                 .title(topic.getForum().getCategory().getBoard().getTitle())
                                 .build())
@@ -35,22 +35,22 @@ public class TopicServiceImpl implements TopicService {
                 .build();
 
         if (topic.getForum().getParent() != null) {
-            forumDTO.setParent(ForumDTO.builder()
+            forumDto.setParent(ForumDto.builder()
                     .slug(topic.getForum().getParent().getSlug())
                     .title(topic.getForum().getParent().getTitle())
                     .build()
             );
         }
 
-        return TopicDTO.builder()
-                .forum(forumDTO)
+        return TopicDto.builder()
+                .forum(forumDto)
                 .title(topic.getTitle())
                 .slug(topic.getSlug())
                 .isLocked(topic.getIsLocked())
                 .posts(topic.getPosts().stream()
-                        .map(post -> PostDTO.builder()
+                        .map(post -> PostDto.builder()
                                 .content(post.getContent())
-                                .poster(UserDTO.builder()
+                                .poster(UserDto.builder()
                                         .username(post.getPoster().getUsername())
                                         .signature(post.getPoster().getSignature())
                                         .build())

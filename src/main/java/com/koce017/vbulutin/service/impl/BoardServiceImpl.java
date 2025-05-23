@@ -1,10 +1,11 @@
 package com.koce017.vbulutin.service.impl;
 
-import com.koce017.vbulutin.data.dto.BoardDTO;
-import com.koce017.vbulutin.data.dto.UserDTO;
+import com.koce017.vbulutin.data.dto.BoardDto;
+import com.koce017.vbulutin.data.dto.UserDto;
 import com.koce017.vbulutin.data.entity.Board;
 import com.koce017.vbulutin.repository.BoardRepository;
 import com.koce017.vbulutin.service.BoardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -13,41 +14,37 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
+@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final CategoryServiceImpl categoryServiceImpl;
 
-    public BoardServiceImpl(BoardRepository boardRepository, CategoryServiceImpl categoryServiceImpl) {
-        this.boardRepository = boardRepository;
-        this.categoryServiceImpl = categoryServiceImpl;
-    }
-
     @Override
-    public List<BoardDTO> findAll() {
+    public List<BoardDto> findAll() {
         List<Board> boards = boardRepository.findByOrderByOwnerUsernameAscTitleAsc();
         return boards.stream().map(board ->
-                BoardDTO.builder()
+                BoardDto.builder()
                         .slug(board.getSlug())
                         .title(board.getTitle())
                         .description(board.getDescription())
                         .isHidden(board.getIsHidden()) // TODO: show hidden boards only to admins
-                        .owner(UserDTO.builder().username(board.getOwner().getUsername()).build())
+                        .owner(UserDto.builder().username(board.getOwner().getUsername()).build())
                         .build()
         ).toList();
     }
 
     @Override
-    public BoardDTO findBySlug(String slug) {
+    public BoardDto findBySlug(String slug) {
         Board board = boardRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Board " + slug + " does not exist."));
 
-        return BoardDTO.builder()
+        return BoardDto.builder()
                 .title(board.getTitle())
                 .slug(board.getSlug())
                 .description(board.getDescription())
                 .isHidden(board.getIsHidden())
-                .categories(board.getCategories().stream().map(categoryServiceImpl::toCategoryDTO).toList())
+                .categories(board.getCategories().stream().map(categoryServiceImpl::toCategoryDto).toList())
                 .build();
     }
 

@@ -1,6 +1,6 @@
 package com.koce017.vbulutin.controller;
 
-import com.koce017.vbulutin.data.dto.ForumDTO;
+import com.koce017.vbulutin.data.dto.ForumDto;
 import com.koce017.vbulutin.service.ForumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ public class ForumController {
     private final ForumService forumService;
 
     @GetMapping("/{slug}")
-    public ForumDTO findBySlug(@PathVariable String slug) {
+    public ForumDto findBySlug(@PathVariable String slug) {
         return forumService.findBySlug(slug);
     }
 

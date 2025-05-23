@@ -1,6 +1,6 @@
 package com.koce017.vbulutin.controller;
 
-import com.koce017.vbulutin.data.dto.BoardDTO;
+import com.koce017.vbulutin.data.dto.BoardDto;
 import com.koce017.vbulutin.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +18,12 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping
-    public List<BoardDTO> findAll() {
+    public List<BoardDto> findAll() {
         return boardService.findAll();
     }
 
     @GetMapping("/{slug}")
-    public BoardDTO findBySlug(@PathVariable String slug) {
+    public BoardDto findBySlug(@PathVariable String slug) {
         return boardService.findBySlug(slug);
     }
 }
