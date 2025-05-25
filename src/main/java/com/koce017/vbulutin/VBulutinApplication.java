@@ -38,9 +38,11 @@ public class VBulutinApplication {
 		return args -> {
 
 			for (long i = 1; i <= 10; ++i) {
+				String username = faker.name().username();
+
 				User user = User.builder()
-						.username(faker.name().username())
-						.email(faker.internet().emailAddress())
+						.username(username)
+						.email(username + "@mail.com")
 						.password(passwordEncoder.encode("password"))
 						.build();
 
