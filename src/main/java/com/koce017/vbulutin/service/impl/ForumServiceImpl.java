@@ -76,6 +76,7 @@ public class ForumServiceImpl implements ForumService {
                         TopicDto.builder()
                                 .title(topic.getTitle())
                                 .slug(topic.getSlug())
+                                .isLocked(topic.getIsLocked() || forum.getIsLocked())
                                 .lastPost(toLastPostDto(topic.getPosts().getLast()))
                                 .build()).toList()
                 ).build();

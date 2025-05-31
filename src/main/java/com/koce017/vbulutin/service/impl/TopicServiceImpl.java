@@ -47,7 +47,7 @@ public class TopicServiceImpl implements TopicService {
                 .forum(forumDto)
                 .title(topic.getTitle())
                 .slug(topic.getSlug())
-                .isLocked(topic.getIsLocked())
+                .isLocked(topic.getIsLocked() || topic.getForum().getIsLocked())
                 .posts(topic.getPosts().stream()
                         .map(post -> PostDto.builder()
                                 .content(post.getContent())
