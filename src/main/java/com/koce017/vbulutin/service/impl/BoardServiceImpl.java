@@ -6,6 +6,8 @@ import com.koce017.vbulutin.data.entity.Board;
 import com.koce017.vbulutin.repository.BoardRepository;
 import com.koce017.vbulutin.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,13 +24,14 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardDto> findAll() {
-        List<Board> boards = boardRepository.findByOrderByOwnerUsernameAscTitleAsc();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<Board> boards = boardRepository.findByOwnerUsernameOrIsHiddenFalseOrderByOwnerUsernameAscTitleAsc(authentication.getName());
         return boards.stream().map(board ->
                 BoardDto.builder()
                         .slug(board.getSlug())
                         .title(board.getTitle())
                         .description(board.getDescription())
-                        .isHidden(board.getIsHidden()) // TODO: show hidden boards only to admins
+                        .isHidden(board.getIsHidden())
                         .owner(UserDto.builder().username(board.getOwner().getUsername()).build())
                         .build()
         ).toList();
