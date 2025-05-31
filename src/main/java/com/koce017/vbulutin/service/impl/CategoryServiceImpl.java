@@ -3,6 +3,7 @@ package com.koce017.vbulutin.service.impl;
 import com.koce017.vbulutin.data.dto.BoardDto;
 import com.koce017.vbulutin.data.dto.CategoryDto;
 import com.koce017.vbulutin.data.dto.ForumDto;
+import com.koce017.vbulutin.data.dto.UserDto;
 import com.koce017.vbulutin.data.entity.Category;
 import com.koce017.vbulutin.data.entity.Forum;
 import com.koce017.vbulutin.repository.CategoryRepository;
@@ -38,6 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
                         .slug(category.getBoard().getSlug())
                         .title(category.getBoard().getTitle())
                         .isHidden(category.getBoard().getIsHidden())
+                        .owner(UserDto.builder().username(category.getBoard().getOwner().getUsername()).build())
                         .build()
         );
 

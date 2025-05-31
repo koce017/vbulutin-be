@@ -31,6 +31,7 @@ public class TopicServiceImpl implements TopicService {
                                 .slug(topic.getForum().getCategory().getBoard().getSlug())
                                 .title(topic.getForum().getCategory().getBoard().getTitle())
                                 .isHidden(topic.getForum().getCategory().getBoard().getIsHidden())
+                                .owner(UserDto.builder().username(topic.getForum().getCategory().getBoard().getOwner().getUsername()).build())
                                 .build())
                         .build())
                 .build();

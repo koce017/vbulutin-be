@@ -55,6 +55,7 @@ public class ForumServiceImpl implements ForumService {
                                         .title(forum.getCategory().getBoard().getTitle())
                                         .slug(forum.getCategory().getBoard().getSlug())
                                         .isHidden(forum.getCategory().getBoard().getIsHidden())
+                                        .owner(UserDto.builder().username(forum.getCategory().getBoard().getOwner().getUsername()).build())
                                         .build()
                                 ).build()
                 )

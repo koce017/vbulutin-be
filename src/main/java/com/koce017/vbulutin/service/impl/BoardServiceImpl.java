@@ -47,6 +47,7 @@ public class BoardServiceImpl implements BoardService {
                 .slug(board.getSlug())
                 .description(board.getDescription())
                 .isHidden(board.getIsHidden())
+                .owner(UserDto.builder().username(board.getOwner().getUsername()).build())
                 .categories(board.getCategories().stream().map(categoryServiceImpl::toCategoryDto).toList())
                 .build();
     }
