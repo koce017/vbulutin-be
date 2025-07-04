@@ -16,7 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -51,10 +50,7 @@ public class ApplicationConfiguration {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withSecretKey(new SecretKeySpec(secret.getBytes(), ""))
-                .macAlgorithm(MacAlgorithm.HS256)
-                .build();
-
+        return NimbusJwtDecoder.withSecretKey(new SecretKeySpec(secret.getBytes(), "HmacSHA256")).build();
     }
 
     @Bean
