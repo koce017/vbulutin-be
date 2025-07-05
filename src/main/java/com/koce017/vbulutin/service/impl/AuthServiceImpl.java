@@ -8,6 +8,7 @@ import com.koce017.vbulutin.service.AuthService;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 
@@ -51,6 +53,7 @@ public class AuthServiceImpl implements AuthService {
                 .issuedAt(now)
                 .issuer("vBulutin")
                 .subject(loginDto.getUsername())
+                .claim("uid", user.getId().toString())
                 .expiresAt(now.plusSeconds(duration))
                 .build();
 
@@ -63,10 +66,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void register(RegisterDto registerDto) {
         if (userRepository.findByUsername(registerDto.getUsername()).isPresent()) {
-            throw new BadCredentialsException("Username is already taken!");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username is already taken!");
         }
         if (userRepository.findByEmail(registerDto.getEmail()).isPresent()) {
-            throw new BadCredentialsException("Email is already taken!");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email is already taken!");
         }
         User user = User.builder()
                 .email(registerDto.getEmail())

@@ -45,12 +45,14 @@ public class TopicServiceImpl implements TopicService {
         }
 
         return TopicDto.builder()
+                .id(topic.getId())
                 .forum(forumDto)
                 .title(topic.getTitle())
                 .slug(topic.getSlug())
                 .isLocked(topic.getIsLocked() || topic.getForum().getIsLocked())
                 .posts(topic.getPosts().stream()
                         .map(post -> PostDto.builder()
+                                .id(post.getId())
                                 .content(post.getContent())
                                 .poster(UserDto.builder()
                                         .username(post.getPoster().getUsername())
