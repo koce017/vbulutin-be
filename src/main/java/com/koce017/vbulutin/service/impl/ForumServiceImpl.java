@@ -43,6 +43,7 @@ public class ForumServiceImpl implements ForumService {
         }
 
         ForumDto forumDto = ForumDto.builder()
+                .id(forum.getId())
                 .title(forum.getTitle())
                 .slug(forum.getSlug())
                 .description(forum.getDescription())

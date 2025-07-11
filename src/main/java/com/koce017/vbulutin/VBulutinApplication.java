@@ -29,11 +29,11 @@ public class VBulutinApplication {
 			ForumRepository forumRepository,
 			TopicRepository topicRepository,
 			CategoryRepository categoryRepository,
-			PasswordEncoder passwordEncoder
+			PasswordEncoder passwordEncoder,
+			Slugify slugify
 	) {
 		Faker faker = new Faker();
 		Random random = new Random();
-		Slugify slugify = Slugify.builder().lowerCase(true).build();
 
 		return args -> {
 

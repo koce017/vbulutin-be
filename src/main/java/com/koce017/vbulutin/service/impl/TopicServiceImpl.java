@@ -1,12 +1,20 @@
 package com.koce017.vbulutin.service.impl;
 
+import com.github.slugify.Slugify;
 import com.koce017.vbulutin.data.dto.*;
+import com.koce017.vbulutin.data.entity.Forum;
+import com.koce017.vbulutin.data.entity.Post;
 import com.koce017.vbulutin.data.entity.Topic;
+import com.koce017.vbulutin.data.entity.User;
+import com.koce017.vbulutin.repository.PostRepository;
 import com.koce017.vbulutin.repository.TopicRepository;
 import com.koce017.vbulutin.service.TopicService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDateTime;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -14,6 +22,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequiredArgsConstructor
 public class TopicServiceImpl implements TopicService {
 
+    private final Slugify slugify;
+    private final PostRepository postRepository;
     private final TopicRepository topicRepository;
 
     @Override
@@ -62,6 +72,28 @@ public class TopicServiceImpl implements TopicService {
                                 .build())
                         .toList()
                 ).build();
+    }
+
+    @Override
+    @Transactional
+    public void create(Long forumId, String title, String content, Long posterId) {
+        Post post = Post.builder()
+                .content(content)
+                .poster((User.builder().id(posterId).build()))
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Topic topic = Topic.builder()
+                .title(title)
+                .forum(Forum.builder().id(forumId).build())
+                .slug(slugify.slugify(title) + "-" + System.currentTimeMillis())
+                .build();
+
+        post.setTopic(topic);
+        topic.getPosts().add(post);
+
+        postRepository.save(post);
+        topicRepository.save(topic);
     }
 
 }

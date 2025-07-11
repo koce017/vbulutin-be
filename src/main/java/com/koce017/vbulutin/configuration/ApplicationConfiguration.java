@@ -1,6 +1,7 @@
 package com.koce017.vbulutin.configuration;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.github.slugify.Slugify;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +47,11 @@ public class ApplicationConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public Slugify slugify() {
+        return Slugify.builder().lowerCase(true).build();
     }
 
     @Bean

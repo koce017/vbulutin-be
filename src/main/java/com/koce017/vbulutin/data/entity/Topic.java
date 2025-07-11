@@ -26,8 +26,9 @@ public class Topic {
     @Column(nullable = false, unique = true)
     private String slug;
 
+    @Builder.Default
     @Column(nullable = false)
-    private Boolean isLocked;
+    private Boolean isLocked = false;
 
     private LocalDateTime deletedAt;
 

@@ -28,8 +28,9 @@ public class Board {
     @Lob
     private String description;
 
+    @Builder.Default
     @Column(nullable = false)
-    private Boolean isHidden;
+    private Boolean isHidden = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
