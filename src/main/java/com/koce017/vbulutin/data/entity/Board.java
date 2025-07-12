@@ -25,7 +25,7 @@ public class Board {
     @Column(nullable = false, unique = true)
     private String slug;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Builder.Default
