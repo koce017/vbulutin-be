@@ -140,7 +140,7 @@ public class VBulutinApplication {
 							.topic(topic)
 							.content(faker.lorem().paragraph())
 							.poster(users.get(random.nextInt(users.size())))
-							.createdAt(LocalDateTime.now().plusMinutes(i))
+							.createdAt(LocalDateTime.now().plusMinutes(1))
 							.build();
 					postRepository.save(post);
 				}

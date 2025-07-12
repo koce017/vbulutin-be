@@ -76,7 +76,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     @Transactional
-    public void create(Long forumId, String title, String content, Long posterId) {
+    public TopicDto create(Long forumId, String title, String content, Long posterId) {
         Post post = Post.builder()
                 .content(content)
                 .poster((User.builder().id(posterId).build()))
@@ -94,6 +94,10 @@ public class TopicServiceImpl implements TopicService {
 
         postRepository.save(post);
         topicRepository.save(topic);
+
+        return TopicDto.builder()
+                .slug(topic.getSlug())
+                .build();
     }
 
 }

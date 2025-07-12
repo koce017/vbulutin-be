@@ -5,6 +5,7 @@ import com.koce017.vbulutin.data.dto.TopicDto;
 import com.koce017.vbulutin.service.TopicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,13 +21,13 @@ public class TopicController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody ObjectNode json) {
+    public ResponseEntity<TopicDto> create(@RequestBody ObjectNode json) {
         Long forumId = json.get("forumId").asLong();
         String title = json.get("title").asText();
         String content = json.get("content").asText();
         Long posterId = json.get("posterId").asLong();
-        topicService.create(forumId, title, content, posterId);
+        TopicDto topicDto = topicService.create(forumId, title, content, posterId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(topicDto);
     }
 
 }
