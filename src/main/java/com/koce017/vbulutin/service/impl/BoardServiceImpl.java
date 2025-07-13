@@ -1,8 +1,11 @@
 package com.koce017.vbulutin.service.impl;
 
 import com.koce017.vbulutin.data.dto.BoardDto;
+import com.koce017.vbulutin.data.dto.BoardTreeNode;
 import com.koce017.vbulutin.data.dto.UserDto;
 import com.koce017.vbulutin.data.entity.Board;
+import com.koce017.vbulutin.data.entity.Category;
+import com.koce017.vbulutin.data.entity.Forum;
 import com.koce017.vbulutin.repository.BoardRepository;
 import com.koce017.vbulutin.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -50,6 +54,32 @@ public class BoardServiceImpl implements BoardService {
                 .owner(UserDto.builder().username(board.getOwner().getUsername()).build())
                 .categories(board.getCategories().stream().map(categoryServiceImpl::toCategoryDto).toList())
                 .build();
+    }
+
+    @Override
+    public List<BoardTreeNode> tree(String slug) {
+        Board board = boardRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Board " + slug + " does not exist."));
+        List<BoardTreeNode> tree = new ArrayList<>();
+
+        for (Category category : board.getCategories()) {
+            BoardTreeNode categoryNode = BoardTreeNode.builder()
+                    .id(category.getSlug())
+                    .text(category.getTitle())
+                    .children(new ArrayList<>())
+                    .build();
+            tree.add(categoryNode);
+            for (Forum forum : category.getForums()) {
+                categoryNode.getChildren().add(BoardTreeNode.builder()
+                        .id(forum.getSlug())
+                        .text(forum.getTitle())
+                        .children(new ArrayList<>())
+                        .build()
+                );
+            }
+        }
+
+        return tree;
     }
 
 }

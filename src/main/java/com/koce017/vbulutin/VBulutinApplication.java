@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 @SpringBootApplication
 public class VBulutinApplication {
@@ -58,7 +59,7 @@ public class VBulutinApplication {
 				String title = fakeTitle();
 				Board board = Board.builder()
 						.title(title)
-						.slug(slugify.slugify(title))
+						.slug(slugifyTitle(slugify, title))
 						.description(faker.lorem().paragraph())
 						.isHidden(random.nextBoolean())
 						.owner(users.get(random.nextInt(users.size())))
@@ -72,7 +73,7 @@ public class VBulutinApplication {
 					String title = fakeTitle();
 					Category category = Category.builder()
 							.title(title)
-							.slug(slugify.slugify(title))
+							.slug(slugifyTitle(slugify, title))
 							.description(faker.lorem().paragraph())
 							.board(board)
 							.position(i)
@@ -89,7 +90,7 @@ public class VBulutinApplication {
 					String title = fakeTitle();
 					Forum forum = Forum.builder()
 							.title(title)
-							.slug(slugify.slugify(title))
+							.slug(slugifyTitle(slugify, title))
 							.description(faker.lorem().paragraph())
 							.isLocked(random.nextBoolean())
 							.category(category)
@@ -103,7 +104,7 @@ public class VBulutinApplication {
 							title = fakeTitle();
 							Forum subforum = Forum.builder()
 									.title(title)
-									.slug(slugify.slugify(title))
+									.slug(slugifyTitle(slugify, title))
 									.description(faker.lorem().paragraph())
 									.isLocked(random.nextBoolean())
 									.category(category)
@@ -124,7 +125,7 @@ public class VBulutinApplication {
 					String title = fakeTitle();
 					Topic topic = Topic.builder()
 							.title(title)
-							.slug(slugify.slugify(title))
+							.slug(slugifyTitle(slugify, title))
 							.isLocked(random.nextBoolean())
 							.forum(forum)
 							.build();
@@ -151,6 +152,10 @@ public class VBulutinApplication {
 	
 	private String fakeTitle() {
 		return Faker.instance().lorem().sentence().replace(".", "");
+	}
+
+	private String slugifyTitle(Slugify slugify, String title) {
+		return slugify.slugify(title) + "-" + UUID.randomUUID().toString().substring(0, 8);
 	}
 
 }

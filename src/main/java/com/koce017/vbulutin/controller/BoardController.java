@@ -1,6 +1,7 @@
 package com.koce017.vbulutin.controller;
 
 import com.koce017.vbulutin.data.dto.BoardDto;
+import com.koce017.vbulutin.data.dto.BoardTreeNode;
 import com.koce017.vbulutin.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,5 +26,10 @@ public class BoardController {
     @GetMapping("/{slug}")
     public BoardDto findBySlug(@PathVariable String slug) {
         return boardService.findBySlug(slug);
+    }
+
+    @GetMapping("/{slug}/tree") // TODO allow only for board owners
+    public List<BoardTreeNode> tree(@PathVariable String slug) {
+        return boardService.tree(slug);
     }
 }
