@@ -9,4 +9,5 @@ public interface BoardService {
     List<BoardDto> findAll();
     BoardDto findBySlug(String slug);
     List<BoardTreeNode> tree(String slug);
+    void saveTree(List<BoardTreeNode> tree);
 }

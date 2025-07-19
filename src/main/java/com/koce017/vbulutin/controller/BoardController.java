@@ -4,10 +4,7 @@ import com.koce017.vbulutin.data.dto.BoardDto;
 import com.koce017.vbulutin.data.dto.BoardTreeNode;
 import com.koce017.vbulutin.service.BoardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +28,10 @@ public class BoardController {
     @GetMapping("/{slug}/tree") // TODO allow only for board owners
     public List<BoardTreeNode> tree(@PathVariable String slug) {
         return boardService.tree(slug);
+    }
+
+    @PutMapping("/tree") // TODO allow only for board owners
+    public void saveTree(@RequestBody List<BoardTreeNode> tree) {
+        boardService.saveTree(tree);
     }
 }
