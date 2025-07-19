@@ -60,6 +60,7 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardTreeNode> tree(String slug) {
         Board board = boardRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Board " + slug + " does not exist."));
+
         List<BoardTreeNode> tree = new ArrayList<>();
 
         for (Category category : board.getCategories()) {
@@ -69,14 +70,29 @@ public class BoardServiceImpl implements BoardService {
                     .children(new ArrayList<>())
                     .build();
             tree.add(categoryNode);
+
             for (Forum forum : category.getForums()) {
-                categoryNode.getChildren().add(BoardTreeNode.builder()
+
+                BoardTreeNode forumNode = BoardTreeNode.builder()
                         .id(forum.getSlug())
                         .text(forum.getTitle())
                         .children(new ArrayList<>())
-                        .build()
-                );
+                        .build();
+
+                if (forum.getParent() == null) {
+                    categoryNode.getChildren().add(forumNode);
+                }
+
+                for (Forum childForum : forum.getChildren()) {
+                    forumNode.getChildren().add(BoardTreeNode.builder()
+                            .id(childForum.getSlug())
+                            .text(childForum.getTitle())
+                            .children(new ArrayList<>())
+                            .build());
+                }
+
             }
+
         }
 
         return tree;

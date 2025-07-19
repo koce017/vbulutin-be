@@ -55,11 +55,11 @@ public class VBulutinApplication {
 
 			List<User> users = userRepository.findAll();
 
-			for (long i = 1; i <= 2; ++i) {
+			for (long i = 1; i <= 5; ++i) {
 				String title = fakeTitle();
 				Board board = Board.builder()
 						.title(title)
-						.slug(slugifyTitle(slugify, title))
+						.slug(slugify.slugify(title))
 						.description(faker.lorem().paragraph())
 						.isHidden(random.nextBoolean())
 						.owner(users.get(random.nextInt(users.size())))
