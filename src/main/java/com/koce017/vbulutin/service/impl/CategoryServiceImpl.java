@@ -4,8 +4,10 @@ import com.koce017.vbulutin.data.dto.BoardDto;
 import com.koce017.vbulutin.data.dto.CategoryDto;
 import com.koce017.vbulutin.data.dto.ForumDto;
 import com.koce017.vbulutin.data.dto.UserDto;
+import com.koce017.vbulutin.data.entity.Board;
 import com.koce017.vbulutin.data.entity.Category;
 import com.koce017.vbulutin.data.entity.Forum;
+import com.koce017.vbulutin.repository.BoardRepository;
 import com.koce017.vbulutin.repository.CategoryRepository;
 import com.koce017.vbulutin.repository.PostRepository;
 import com.koce017.vbulutin.service.CategoryService;
@@ -23,8 +25,10 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    private final CategoryRepository categoryRepository;
     private final PostRepository postRepository;
+    private final BoardRepository boardRepository;
+    private final CategoryRepository categoryRepository;
+
     private final ForumServiceImpl forumServiceImpl;
 
     @Override
@@ -44,6 +48,22 @@ public class CategoryServiceImpl implements CategoryService {
         );
 
         return categoryDto;
+    }
+
+    @Override
+    public void create(CategoryDto categoryDto) {
+        Board board = boardRepository.findBySlug(categoryDto.getBoard().getSlug())
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Board " + categoryDto.getBoard().getSlug() + " does not exist."));
+
+        Category category = Category.builder()
+                .title(categoryDto.getTitle())
+                .slug(categoryDto.getSlug())
+                .description(categoryDto.getDescription())
+                .position(categoryRepository.findMaxPositionByBoardId(board.getId()))
+                .board(board)
+                .build();
+
+        categoryRepository.save(category);
     }
 
     public CategoryDto toCategoryDto(Category category) {
