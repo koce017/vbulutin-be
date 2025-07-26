@@ -44,7 +44,7 @@ public class PostServiceImpl implements PostService {
                 .content(postDto.getContent())
                 .topic(topic)
                 .poster(poster)
-                .createdAt(LocalDateTime.now()) // TODO sometimes posts appear out of order
+                .createdAt(LocalDateTime.now())
                 .build();
 
         Post saved = postRepository.save(post);

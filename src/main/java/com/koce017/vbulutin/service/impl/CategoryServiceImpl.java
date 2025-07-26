@@ -11,6 +11,7 @@ import com.koce017.vbulutin.repository.BoardRepository;
 import com.koce017.vbulutin.repository.CategoryRepository;
 import com.koce017.vbulutin.repository.PostRepository;
 import com.koce017.vbulutin.service.CategoryService;
+import com.koce017.vbulutin.util.SlugifyUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -57,7 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category category = Category.builder()
                 .title(categoryDto.getTitle())
-                .slug(categoryDto.getSlug())
+                .slug(SlugifyUtil.slugify(categoryDto.getTitle()))
                 .description(categoryDto.getDescription())
                 .position(categoryRepository.findMaxPositionByBoardId(board.getId()))
                 .board(board)

@@ -25,12 +25,12 @@ public class BoardController {
         return boardService.findBySlug(slug);
     }
 
-    @GetMapping("/{slug}/tree") // TODO allow only for board owners
+    @GetMapping("/{slug}/tree")
     public List<BoardTreeNode> tree(@PathVariable String slug) {
         return boardService.tree(slug);
     }
 
-    @PutMapping("/tree") // TODO allow only for board owners
+    @PutMapping("/tree")
     public void saveTree(@RequestBody List<BoardTreeNode> tree) {
         boardService.saveTree(tree);
     }
