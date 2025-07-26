@@ -1,13 +1,16 @@
 package com.koce017.vbulutin.service.impl;
 
 import com.koce017.vbulutin.data.dto.*;
+import com.koce017.vbulutin.data.entity.Category;
 import com.koce017.vbulutin.data.entity.Forum;
 import com.koce017.vbulutin.data.entity.Post;
 import com.koce017.vbulutin.data.entity.Topic;
+import com.koce017.vbulutin.repository.CategoryRepository;
 import com.koce017.vbulutin.repository.ForumRepository;
 import com.koce017.vbulutin.repository.PostRepository;
 import com.koce017.vbulutin.repository.TopicRepository;
 import com.koce017.vbulutin.service.ForumService;
+import com.koce017.vbulutin.util.SlugifyUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,9 +24,10 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequiredArgsConstructor
 public class ForumServiceImpl implements ForumService {
 
+    private final PostRepository postRepository;
     private final ForumRepository forumRepository;
     private final TopicRepository topicRepository;
-    private final PostRepository postRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public ForumDto findBySlug(String slug) {
@@ -92,6 +96,24 @@ public class ForumServiceImpl implements ForumService {
         }
 
         return forumDto;
+    }
+
+    @Override
+    public void create(ForumDto forumDto) {
+        Category category = categoryRepository.findBySlug(forumDto.getCategory().getSlug())
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Category " + forumDto.getCategory().getSlug() + " does not exist."));
+
+        Long maxPosition = forumRepository.findMaxPositionByCategoryIdAndParentForumId(category.getId());
+
+        Forum forum = Forum.builder()
+                .title(forumDto.getTitle())
+                .slug(SlugifyUtil.slugify(forumDto.getTitle()))
+                .description(forumDto.getDescription())
+                .category(category)
+                .position(maxPosition != null ? maxPosition : 0)
+                .build();
+
+        forumRepository.save(forum);
     }
 
     public PostDto toLastPostDto(Post post) {

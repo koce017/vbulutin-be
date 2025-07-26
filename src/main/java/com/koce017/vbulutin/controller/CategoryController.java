@@ -17,7 +17,7 @@ public class CategoryController {
         return categoryService.findBySlug(slug);
     }
 
-    @PutMapping
+    @PostMapping
     public void create(@RequestBody CategoryDto categoryDto) {
         categoryService.create(categoryDto);
     }
