@@ -31,8 +31,9 @@ public class Forum {
     @Column(nullable = false)
     private Long position;
 
+    @Builder.Default
     @Column(nullable = false)
-    private Boolean isLocked;
+    private Boolean isLocked = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;

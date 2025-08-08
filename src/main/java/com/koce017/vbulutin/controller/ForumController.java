@@ -3,10 +3,7 @@ package com.koce017.vbulutin.controller;
 import com.koce017.vbulutin.data.dto.ForumDto;
 import com.koce017.vbulutin.service.ForumService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/forum")
@@ -18,6 +15,11 @@ public class ForumController {
     @GetMapping("/{slug}")
     public ForumDto findBySlug(@PathVariable String slug) {
         return forumService.findBySlug(slug);
+    }
+
+    @PostMapping
+    public void create(@RequestBody ForumDto forumDto) {
+        forumService.create(forumDto);
     }
 
 }

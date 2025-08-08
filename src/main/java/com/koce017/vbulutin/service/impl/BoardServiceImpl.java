@@ -1,9 +1,14 @@
 package com.koce017.vbulutin.service.impl;
 
 import com.koce017.vbulutin.data.dto.BoardDto;
+import com.koce017.vbulutin.data.dto.BoardTreeNode;
 import com.koce017.vbulutin.data.dto.UserDto;
 import com.koce017.vbulutin.data.entity.Board;
+import com.koce017.vbulutin.data.entity.Category;
+import com.koce017.vbulutin.data.entity.Forum;
 import com.koce017.vbulutin.repository.BoardRepository;
+import com.koce017.vbulutin.repository.CategoryRepository;
+import com.koce017.vbulutin.repository.ForumRepository;
 import com.koce017.vbulutin.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -11,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -19,7 +25,9 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
+    private final ForumRepository forumRepository;
     private final BoardRepository boardRepository;
+    private final CategoryRepository categoryRepository;
     private final CategoryServiceImpl categoryServiceImpl;
 
     @Override
@@ -50,6 +58,90 @@ public class BoardServiceImpl implements BoardService {
                 .owner(UserDto.builder().username(board.getOwner().getUsername()).build())
                 .categories(board.getCategories().stream().map(categoryServiceImpl::toCategoryDto).toList())
                 .build();
+    }
+
+    @Override
+    public List<BoardTreeNode> tree(String slug) {
+        Board board = boardRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Board " + slug + " does not exist."));
+
+        List<BoardTreeNode> tree = new ArrayList<>();
+
+        for (Category category : board.getCategories()) {
+            BoardTreeNode categoryNode = BoardTreeNode.builder()
+                    .id(category.getSlug())
+                    .text(category.getTitle())
+                    .children(new ArrayList<>())
+                    .build();
+            tree.add(categoryNode);
+
+            for (Forum forum : category.getForums()) {
+
+                BoardTreeNode forumNode = BoardTreeNode.builder()
+                        .id(forum.getSlug())
+                        .text(forum.getTitle())
+                        .children(new ArrayList<>())
+                        .build();
+
+                if (forum.getParent() == null) {
+                    categoryNode.getChildren().add(forumNode);
+                }
+
+                for (Forum childForum : forum.getChildren()) {
+                    forumNode.getChildren().add(BoardTreeNode.builder()
+                            .id(childForum.getSlug())
+                            .text(childForum.getTitle())
+                            .children(new ArrayList<>())
+                            .build());
+                }
+
+            }
+
+        }
+
+        return tree;
+    }
+
+    @Override
+    public void saveTree(List<BoardTreeNode> tree) {
+
+        long categoryPosition = 0;
+        for (BoardTreeNode categoryNode : tree) {
+
+            Category category = categoryRepository.findBySlug(categoryNode.getId())
+                    .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Category " + categoryNode.getId() + " does not exist."));
+            category.setPosition(categoryPosition);
+            categoryRepository.save(category);
+            ++categoryPosition;
+
+            long forumPosition = 0;
+            for (BoardTreeNode forumNode : categoryNode.getChildren()) {
+
+                Forum forum = forumRepository.findBySlug(forumNode.getId())
+                        .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Forum " + forumNode.getId() + " does not exist."));
+                forum.setParent(null);
+                forum.setCategory(category);
+                forum.setPosition(forumPosition);
+                forumRepository.save(forum);
+                ++forumPosition;
+
+                long childForumPosition = 0;
+                for (BoardTreeNode childForumNode : forumNode.getChildren()) {
+
+                    Forum childForum = forumRepository.findBySlug(childForumNode.getId())
+                            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Forum " + childForumNode.getId() + " does not exist."));
+                    childForum.setCategory(category);
+                    childForum.setParent(forum);
+                    childForum.setPosition(childForumPosition);
+                    forumRepository.save(childForum);
+                    ++childForumPosition;
+
+                }
+
+            }
+
+        }
+
     }
 
 }

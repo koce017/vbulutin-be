@@ -1,6 +1,7 @@
 package com.koce017.vbulutin.data.dto;
 
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.List;
@@ -12,7 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 public class CategoryDto {
     private Long id;
+    @NotBlank
     private String title;
+    @NotBlank
     private String slug;
     private String description;
     private Long position;

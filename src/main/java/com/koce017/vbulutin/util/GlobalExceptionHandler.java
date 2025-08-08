@@ -1,4 +1,4 @@
-package com.koce017.vbulutin.error;
+package com.koce017.vbulutin.util;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;

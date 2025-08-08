@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import com.github.slugify.Slugify;
 import com.koce017.vbulutin.data.entity.*;
 import com.koce017.vbulutin.repository.*;
+import com.koce017.vbulutin.util.SlugifyUtil;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -54,7 +55,7 @@ public class VBulutinApplication {
 
 			List<User> users = userRepository.findAll();
 
-			for (long i = 1; i <= 2; ++i) {
+			for (long i = 1; i <= 5; ++i) {
 				String title = fakeTitle();
 				Board board = Board.builder()
 						.title(title)
@@ -72,7 +73,7 @@ public class VBulutinApplication {
 					String title = fakeTitle();
 					Category category = Category.builder()
 							.title(title)
-							.slug(slugify.slugify(title))
+							.slug(SlugifyUtil.slugify(title))
 							.description(faker.lorem().paragraph())
 							.board(board)
 							.position(i)
@@ -89,7 +90,7 @@ public class VBulutinApplication {
 					String title = fakeTitle();
 					Forum forum = Forum.builder()
 							.title(title)
-							.slug(slugify.slugify(title))
+							.slug(SlugifyUtil.slugify(title))
 							.description(faker.lorem().paragraph())
 							.isLocked(random.nextBoolean())
 							.category(category)
@@ -103,7 +104,7 @@ public class VBulutinApplication {
 							title = fakeTitle();
 							Forum subforum = Forum.builder()
 									.title(title)
-									.slug(slugify.slugify(title))
+									.slug(SlugifyUtil.slugify(title))
 									.description(faker.lorem().paragraph())
 									.isLocked(random.nextBoolean())
 									.category(category)
@@ -124,7 +125,7 @@ public class VBulutinApplication {
 					String title = fakeTitle();
 					Topic topic = Topic.builder()
 							.title(title)
-							.slug(slugify.slugify(title))
+							.slug(SlugifyUtil.slugify(title))
 							.isLocked(random.nextBoolean())
 							.forum(forum)
 							.build();
